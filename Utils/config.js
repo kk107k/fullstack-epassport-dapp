@@ -1,12 +1,7 @@
 export const API_URL = "https://volta-rpc.energyweb.org/";
 export const PRIVATE_KEY = "efc4fc54cdfe525a147245ef5f833b16d1130caea768e046fb064b3a30b019e6"; 
-export const contractAddress = "0xb98B4a8bA6cbbD3a29bb666847ceb90358aa73e6";
+export const contractAddress = "0x3b55Af38D847ecB0Eb97709352F8432B9aAb1797";
 export const contractAbi = [
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
 	{
 		"inputs": [
 			{
@@ -51,6 +46,26 @@ export const contractAbi = [
 			}
 		],
 		"name": "addPassport",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "deleteAllPassports",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "deletePassport",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -107,6 +122,24 @@ export const contractAbi = [
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "removePassport",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	},
 	{
 		"inputs": [],
@@ -295,19 +328,6 @@ export const contractAbi = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "removePassport",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ];
