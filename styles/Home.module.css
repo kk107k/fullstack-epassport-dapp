@@ -95,3 +95,34 @@
 .button:hover {
   background-color: #0b84ff;
 }
+
+/* Home.module.css */
+
+.spinnerContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.5); /* Semi-transparent grey cover */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure spinner is on top of other content */
+}
+
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3); /* Lighter border */
+  border-left-color: #6366f1; /* Blue border */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

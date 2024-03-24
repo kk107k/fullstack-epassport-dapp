@@ -5,7 +5,18 @@ import * as Constants from "../Utils/config"
 
 function App() {
 
+  const [formData, setFormData] = useState({
+    name: "",
+    passportNumber: "",
+    nationality: "",
+    birthDate: "",
+    placeOfBirth: "",
+    sex: "",
+    issueDate: "",
+    expiryDate: ""
+  });
   const [passports, setPassports] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const connectToMetamask = async () => {
@@ -34,16 +45,6 @@ function App() {
     connectToMetamask();
   }, []);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    passportNumber: "",
-    nationality: "",
-    birthDate: "",
-    placeOfBirth: "",
-    sex: "",
-    issueDate: "",
-    expiryDate: ""
-  });
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -55,6 +56,7 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch("/api/addPassport", {
         method: "POST",
@@ -63,7 +65,7 @@ function App() {
         },
         body: JSON.stringify(formData)
       });
-
+  
       if (!response.ok) {
         const error = await response.json();
         console.error(error);
@@ -80,13 +82,19 @@ function App() {
           issueDate: "",
           expiryDate: ""
         });
+        // Move reload inside the else block
+        window.location.reload();
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   const handleDeletePassport = async (index) => {
+    setLoading(true);
     try {
       const response = await fetch("/api/deletePassport", {
         method: "DELETE",
@@ -107,10 +115,16 @@ function App() {
     } catch (error) {
       console.error(error);
     }
+    setLoading(false);
   };
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
+    {loading && (
+      <div className={styles.spinnerContainer}>
+        <div className={styles.spinner}></div>
+      </div>
+    )}
       <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
