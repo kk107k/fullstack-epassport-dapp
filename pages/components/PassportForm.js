@@ -60,6 +60,11 @@ function PassportForm({ setPassports }) {
 
   return (
     <div className={styles.container}>
+        {loading && (
+        <div className={styles.spinnerContainer}>
+          <div className={styles.spinner}></div>
+        </div>
+      )}
       <form className={styles.form} onSubmit={handleSubmit}>
         <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
         <input type="text" name="passportNumber" placeholder="Passport Number" value={formData.passportNumber} onChange={handleChange} />

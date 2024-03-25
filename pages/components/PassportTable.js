@@ -70,6 +70,11 @@ function PassportTable({ passports, setPassports }) {
 
   return (
     <div className={styles.container}>
+        {loading && (
+        <div className={styles.spinnerContainer}>
+          <div className={styles.spinner}></div>
+        </div>
+      )}
       <div className={styles.search}>
         <select value={searchCriteria} onChange={e => setSearchCriteria(e.target.value)}>
           <option value="name">Name</option>
