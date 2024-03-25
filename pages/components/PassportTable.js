@@ -6,6 +6,8 @@ function PassportTable({ passports, setPassports }) {
   const [editIndex, setEditIndex] = useState(null);
   const [newIssueDate, setNewIssueDate] = useState("");
   const [newExpiryDate, setNewExpiryDate] = useState("");
+  const [searchCriteria, setSearchCriteria] = useState("name");
+  const [searchValue, setSearchValue] = useState("");
 
   const handleDeletePassport = async (index) => {
     setLoading(true);
@@ -61,8 +63,28 @@ function PassportTable({ passports, setPassports }) {
     setLoading(false);
   };
 
+  const filteredPassports = passports.filter(passport => {
+    if (searchValue === "") return true;
+    return passport[searchCriteria].toLowerCase().includes(searchValue.toLowerCase());
+  });
+
   return (
     <div className={styles.container}>
+      <div className={styles.search}>
+        <select value={searchCriteria} onChange={e => setSearchCriteria(e.target.value)}>
+          <option value="name">Name</option>
+          <option value="passportNumber">Passport Number</option>
+          <option value="nationality">Nationality</option>
+            <option value="birthDate">Birth Date</option>
+            <option value="placeOfBirth">Place of Birth</option>
+            <option value="Sex">Sex</option>
+            <option value="issueDate">Issue Date</option>
+            <option value="expiryDate">Expiry Date</option>
+            <option value="passportAddress">Passport Address</option>
+          {/* Add options for other attributes here */}
+        </select>
+        <input type="text" value={searchValue} onChange={e => setSearchValue(e.target.value)} placeholder={`Search by ${searchCriteria}`} />
+      </div>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -79,7 +101,7 @@ function PassportTable({ passports, setPassports }) {
           </tr>
         </thead>
         <tbody>
-          {passports.map((passport, index) => (
+          {filteredPassports.map((passport, index) => (
             <tr key={index}>
               <td>{passport.name}</td>
               <td>{passport.passportNumber}</td>
