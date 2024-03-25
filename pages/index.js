@@ -84,12 +84,11 @@ function App() {
           issueDate: "",
           expiryDate: ""
         });
-        // Move reload inside the else block
-        window.location.reload();
       }
     } catch (error) {
       console.error(error);
     } finally {
+      window.location.reload();
       setLoading(false);
     }
   };
@@ -180,20 +179,22 @@ function App() {
               <th>Sex</th>
               <th>Issue Date</th>
               <th>Expiry Date</th>
+              <th>Passport Address</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {passports.map((passport, index) => (
               <tr key={index}>
-                <td>{index ? <input type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} /> : passport.name}</td>
-                <td>{index ? <input type="text" value={formData.passportNumber} onChange={e => setFormData({ ...formData, passportNumber: e.target.value })} /> : passport.passportNumber}</td>
-                <td>{index ? <input type="text" value={formData.nationality} onChange={e => setFormData({ ...formData, nationality: e.target.value })} /> : passport.nationality}</td>
-                <td>{index ? <input type="text" value={formData.birthDate} onChange={e => setFormData({ ...formData, birthDate: e.target.value })} /> : passport.birthDate}</td>
-                <td>{index ? <input type="text" value={formData.placeOfBirth} onChange={e => setFormData({ ...formData, placeOfBirth: e.target.value })} /> : passport.placeOfBirth}</td>
-                <td>{index ? <input type="text" value={formData.sex} onChange={e => setFormData({ ...formData, sex: e.target.value })} /> : passport.sex}</td>
+                <td>{passport.name}</td>
+                <td>{passport.passportNumber}</td>
+                <td>{passport.nationality}</td>
+                <td>{passport.birthDate}</td>
+                <td>{passport.placeOfBirth}</td>
+                <td>{passport.sex}</td>
                 <td>{editIndex === index ? <input type="text" value={newIssueDate} onChange={e => setNewIssueDate(e.target.value)} /> : passport.issueDate}</td>
                 <td>{editIndex === index ? <input type="text" value={newExpiryDate} onChange={e => setNewExpiryDate(e.target.value)} /> : passport.expiryDate}</td>
+                <td>{passport.passportAddress}</td>
                 <td>
                   {editIndex === index ? (
                     <>
