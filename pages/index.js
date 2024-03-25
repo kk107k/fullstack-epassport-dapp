@@ -17,6 +17,9 @@ function App() {
   });
   const [passports, setPassports] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+  const [newIssueDate, setNewIssueDate] = useState("");
+  const [newExpiryDate, setNewExpiryDate] = useState("");
 
   useEffect(() => {
     const connectToMetamask = async () => {
@@ -45,7 +48,6 @@ function App() {
     connectToMetamask();
   }, []);
 
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData(prevData => ({
@@ -65,7 +67,7 @@ function App() {
         },
         body: JSON.stringify(formData)
       });
-  
+
       if (!response.ok) {
         const error = await response.json();
         console.error(error);
@@ -91,7 +93,6 @@ function App() {
       setLoading(false);
     }
   };
-  
 
   const handleDeletePassport = async (index) => {
     setLoading(true);
@@ -118,25 +119,54 @@ function App() {
     setLoading(false);
   };
 
+  const handleUpdatePassportDates = async (index) => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/updatePassportDate", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ index, issueDate: newIssueDate, expiryDate: newExpiryDate })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error(error);
+      } else {
+        // Update the issue date and expiry date of the passport
+        const updatedPassports = [...passports];
+        updatedPassports[index].issueDate = newIssueDate;
+        updatedPassports[index].expiryDate = newExpiryDate;
+        setPassports(updatedPassports);
+        // Reset editIndex after updating
+        setEditIndex(null);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
+  };
+
   return (
     <div style={{ position: "relative" }}>
-    {loading && (
-      <div className={styles.spinnerContainer}>
-        <div className={styles.spinner}></div>
-      </div>
-    )}
+      {loading && (
+        <div className={styles.spinnerContainer}>
+          <div className={styles.spinner}></div>
+        </div>
+      )}
       <div className={styles.container}>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
-        <input type="text" name="passportNumber" placeholder="Passport Number" value={formData.passportNumber} onChange={handleChange} />
-        <input type="text" name="nationality" placeholder="Nationality" value={formData.nationality} onChange={handleChange} />
-        <input type="text" name="birthDate" placeholder="Birth Date" value={formData.birthDate} onChange={handleChange} />
-        <input type="text" name="placeOfBirth" placeholder="Place of Birth" value={formData.placeOfBirth} onChange={handleChange} />
-        <input type="text" name="sex" placeholder="Sex" value={formData.sex} onChange={handleChange} />
-        <input type="text" name="issueDate" placeholder="Issue Date" value={formData.issueDate} onChange={handleChange} />
-        <input type="text" name="expiryDate" placeholder="Expiry Date" value={formData.expiryDate} onChange={handleChange} />
-        <input type="submit" value="Add Passport" />
-      </form>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
+          <input type="text" name="passportNumber" placeholder="Passport Number" value={formData.passportNumber} onChange={handleChange} />
+          <input type="text" name="nationality" placeholder="Nationality" value={formData.nationality} onChange={handleChange} />
+          <input type="text" name="birthDate" placeholder="Birth Date" value={formData.birthDate} onChange={handleChange} />
+          <input type="text" name="placeOfBirth" placeholder="Place of Birth" value={formData.placeOfBirth} onChange={handleChange} />
+          <input type="text" name="sex" placeholder="Sex" value={formData.sex} onChange={handleChange} />
+          <input type="text" name="issueDate" placeholder="Issue Date" value={formData.issueDate} onChange={handleChange} />
+          <input type="text" name="expiryDate" placeholder="Expiry Date" value={formData.expiryDate} onChange={handleChange} />
+          <input type="submit" value="Add Passport" />
+        </form>
       </div>
       <div className={styles.container}>
         <table className={styles.table}>
@@ -154,23 +184,31 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {
-              passports.map((passport, index) => (
-                <tr key={index}>
-                  <td>{passport.name}</td>
-                  <td>{passport.passportNumber}</td>
-                  <td>{passport.nationality}</td>
-                  <td>{passport.birthDate}</td>
-                  <td>{passport.placeOfBirth}</td>
-                  <td>{passport.sex}</td>
-                  <td>{passport.issueDate}</td>
-                  <td>{passport.expiryDate}</td>
-                  <td>
-                    <button className={styles.button} onClick={() => handleDeletePassport(index)}>Delete</button>
-                  </td>
-                </tr>
-              ))
-            }
+            {passports.map((passport, index) => (
+              <tr key={index}>
+                <td>{index ? <input type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} /> : passport.name}</td>
+                <td>{index ? <input type="text" value={formData.passportNumber} onChange={e => setFormData({ ...formData, passportNumber: e.target.value })} /> : passport.passportNumber}</td>
+                <td>{index ? <input type="text" value={formData.nationality} onChange={e => setFormData({ ...formData, nationality: e.target.value })} /> : passport.nationality}</td>
+                <td>{index ? <input type="text" value={formData.birthDate} onChange={e => setFormData({ ...formData, birthDate: e.target.value })} /> : passport.birthDate}</td>
+                <td>{index ? <input type="text" value={formData.placeOfBirth} onChange={e => setFormData({ ...formData, placeOfBirth: e.target.value })} /> : passport.placeOfBirth}</td>
+                <td>{index ? <input type="text" value={formData.sex} onChange={e => setFormData({ ...formData, sex: e.target.value })} /> : passport.sex}</td>
+                <td>{editIndex === index ? <input type="text" value={newIssueDate} onChange={e => setNewIssueDate(e.target.value)} /> : passport.issueDate}</td>
+                <td>{editIndex === index ? <input type="text" value={newExpiryDate} onChange={e => setNewExpiryDate(e.target.value)} /> : passport.expiryDate}</td>
+                <td>
+                  {editIndex === index ? (
+                    <>
+                      <button className={styles.button} onClick={() => handleUpdatePassportDates(index)}>Update</button>
+                      <button className={styles.button} onClick={() => setEditIndex(null)}>Cancel</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className={styles.button} onClick={() => setEditIndex(index)}>Edit</button>
+                      <button className={styles.button} onClick={() => handleDeletePassport(index)}>Delete</button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
