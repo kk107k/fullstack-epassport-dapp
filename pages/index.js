@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import * as Constants from "../Utils/config";
 import PassportForm from "./components/PassportForm";
 import PassportTable from "./components/PassportTable";
+import styles from '../styles/Home.module.css';
 
 function App() {
 
@@ -37,7 +38,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div class={styles.body}>
       <PassportForm setPassports={setPassports} />
       <PassportTable passports={passports} setPassports={setPassports} />
     </div>

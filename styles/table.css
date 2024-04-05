@@ -1,0 +1,26 @@
+/* Table styling */
+
+/* Light mode styles */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th,
+  .table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd; /* Light gray border */
+  }
+  
+  /* Dark mode styles */
+  .dark-mode {
+    background-color: #333; /* Dark background color */
+    color: #fff; /* Light text color */
+  }
+  
+  .dark-mode .table th,
+  .dark-mode .table td {
+    border-color: #555; /* Dark gray border color */
+  }
+  
