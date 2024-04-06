@@ -93,12 +93,12 @@ function PassportForm({ setPassports }) {
           </div>
         </div>
         <div className={styles.formbody}>
-          <input type="text" name="birthDate" placeholder="Birth Date" value={formData.birthDate} onChange={handleChange} />
+          <input type="date" name="birthDate" placeholder="Birth Date" value={formData.birthDate} onChange={handleChange} />
           <input type="text" name="placeOfBirth" placeholder="Place of Birth" value={formData.placeOfBirth} onChange={handleChange} />
         </div>
         <div className={styles.formbody}>
-          <input type="text" name="issueDate" placeholder="Issue Date" value={formData.issueDate} onChange={handleChange} />
-          <input type="text" name="expiryDate" placeholder="Expiry Date" value={formData.expiryDate} onChange={handleChange} />
+          <input type="date" name="issueDate" placeholder="Issue Date" value={formData.issueDate} onChange={handleChange} />
+          <input type="date" name="expiryDate" placeholder="Expiry Date" value={formData.expiryDate} onChange={handleChange} />
         </div>
         <input type="submit" value="Add Passport" />
       </form>

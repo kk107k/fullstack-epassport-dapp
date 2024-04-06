@@ -9,6 +9,17 @@ function PassportTable({ passports, setPassports }) {
   const [searchCriteria, setSearchCriteria] = useState("name");
   const [searchValue, setSearchValue] = useState("");
 
+  // Function to format timestamp to mm-dd-yyyy
+  const formatDate = (timestamp) => {
+    console.log(timestamp);
+    const date = new Date(timestamp * 1);
+    console.log(date);
+    const mm = date.getMonth() + 1;
+    const dd = date.getDate();
+    const yyyy = date.getFullYear();
+    return `${mm < 10 ? '0' + mm : mm}-${dd < 10 ? '0' + dd : dd}-${yyyy}`;
+  };
+
   const handleDeletePassport = async (index) => {
     setLoading(true);
     try {
@@ -139,11 +150,11 @@ function PassportTable({ passports, setPassports }) {
               <td>{passport.name}</td>
               <td>{passport.passportNumber}</td>
               <td>{passport.nationality}</td>
-              <td>{passport.birthDate}</td>
+              <td>{formatDate(passport.birthDate)}</td> {/* Format birthDate */}
               <td>{passport.placeOfBirth}</td>
               <td>{passport.sex}</td>
-              <td>{editIndex === index ? <input type="text" value={newIssueDate} onChange={e => setNewIssueDate(e.target.value)} /> : passport.issueDate}</td>
-              <td>{editIndex === index ? <input type="text" value={newExpiryDate} onChange={e => setNewExpiryDate(e.target.value)} /> : passport.expiryDate}</td>
+              <td>{editIndex === index ? <input type="text" value={newIssueDate} onChange={e => setNewIssueDate(e.target.value)} /> : formatDate(passport.issueDate)}</td>
+              <td>{editIndex === index ? <input type="text" value={newExpiryDate} onChange={e => setNewExpiryDate(e.target.value)} /> : formatDate(passport.expiryDate)}</td>
               <td>{passport.passportAddress}</td>
               <td>
                 {editIndex === index ? (

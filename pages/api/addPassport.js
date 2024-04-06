@@ -18,16 +18,21 @@ async function handler(req, res) {
         const signer = new ethers.Wallet(Constants.PRIVATE_KEY, provider);
         const contract = new ethers.Contract(Constants.contractAddress, Constants.contractAbi, signer);
         
+        // Convert birthDate, issueDate, and expiryDate to timestamps
+        const birthTimestamp = new Date(birthDate).getTime(); // assuming birthDate is in format mm-dd-yyyy
+        const issueTimestamp = new Date(issueDate).getTime(); // assuming issueDate is in format mm-dd-yyyy
+        const expiryTimestamp = new Date(expiryDate).getTime(); // assuming expiryDate is in format mm-dd-yyyy
+        
         // Call the addPassport function in the smart contract
         await contract.addPassport(
             name,
             passportNumber,
             nationality,
-            birthDate,
+            birthTimestamp,
             placeOfBirth,
             sex,
-            issueDate,
-            expiryDate
+            issueTimestamp,
+            expiryTimestamp
         );
 
         res.status(200).json({ message: "Passport added successfully" });

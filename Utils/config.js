@@ -1,6 +1,6 @@
 export const API_URL = "https://volta-rpc.energyweb.org/";
 export const PRIVATE_KEY = "efc4fc54cdfe525a147245ef5f833b16d1130caea768e046fb064b3a30b019e6"; 
-export const contractAddress = "0xb5774DBdCB319c92A1e3493aD022bE0D0F38305b";
+export const contractAddress = "0x17ca8EacA85476ac13Ba3453Ba9315FE54609218";
 export const contractAbi = [
 	{
 		"inputs": [
