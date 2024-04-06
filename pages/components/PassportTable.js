@@ -34,15 +34,14 @@ function PassportTable({ passports, setPassports }) {
     setLoading(false);
   };
 
-  const handleDeleteAllPassport = async (index) => {
+  const handleDeleteAllPassports = async () => {
     setLoading(true);
     try {
       const response = await fetch("/api/deleteAllPassports", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ index })
+        }
       });
 
       if (!response.ok) {
@@ -50,8 +49,7 @@ function PassportTable({ passports, setPassports }) {
         console.error(error);
       } else {
         // Update passports state after deletion
-        const updatedPassports = passports.filter((passport, i) => i !== index);
-        setPassports(updatedPassports);
+        setPassports([]);
       }
     } catch (error) {
       console.error(error);
@@ -157,7 +155,7 @@ function PassportTable({ passports, setPassports }) {
                   <>
                     <button className={styles.button} onClick={() => setEditIndex(index)}>Edit</button>
                     <button className={styles.button} onClick={() => handleDeletePassport(index)}>Delete</button>
-                  </>
+                    <button className={styles.button} onClick={handleDeleteAllPassports}>Delete All Passports</button>                  </>
                 )}
               </td>
             </tr>
