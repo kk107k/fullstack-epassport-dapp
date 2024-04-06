@@ -1,6 +1,6 @@
 export const API_URL = "https://volta-rpc.energyweb.org/";
 export const PRIVATE_KEY = "efc4fc54cdfe525a147245ef5f833b16d1130caea768e046fb064b3a30b019e6"; 
-export const contractAddress = "0xcfff944873b21d7F35Ba4973862D5723bCEd1A61";
+export const contractAddress = "0xb5774DBdCB319c92A1e3493aD022bE0D0F38305b";
 export const contractAbi = [
 	{
 		"inputs": [
@@ -51,6 +51,13 @@ export const contractAbi = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "deleteAllPassports",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -72,7 +79,7 @@ export const contractAbi = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "index",
+				"name": "id",
 				"type": "uint256"
 			},
 			{
@@ -86,7 +93,7 @@ export const contractAbi = [
 				"type": "uint256"
 			}
 		],
-		"name": "updatePassportDates",
+		"name": "updatePassportDate",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -143,9 +150,81 @@ export const contractAbi = [
 						"type": "uint256"
 					}
 				],
-				"internalType": "struct ePassportFactory.PassportInfo[]",
+				"internalType": "struct PassportFactory.PassportDetails[]",
 				"name": "",
 				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_passportAddress",
+				"type": "address"
+			}
+		],
+		"name": "getPassport",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "passportNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "nationality",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "birthDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "placeOfBirth",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "sex",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "issueDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "expiryDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "ePassportAddress",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getPassportContracts",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
 			}
 		],
 		"stateMutability": "view",
@@ -178,6 +257,65 @@ export const contractAbi = [
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "passportDetailsMap",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "passportAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "passportNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "nationality",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "birthDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "placeOfBirth",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "sex",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "issueDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "expiryDate",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 contract PassportRegistry {
     address public owner;
-    
+
     struct Passport {
         string name;
         string passportNumber;
@@ -129,8 +129,8 @@ contract PassportRegistry {
     }
 
     function updatePassportDates(uint256 id, uint256 _issueDate, uint256 _expiryDate) public onlyOwner {
-    require(id < passports.length, "Passport does not exist");
-    passports[id].issueDate = _issueDate;
-    passports[id].expiryDate = _expiryDate;
+        require(id < passports.length, "Passport does not exist");
+        passports[id].issueDate = _issueDate;
+        passports[id].expiryDate = _expiryDate;
     }
 }

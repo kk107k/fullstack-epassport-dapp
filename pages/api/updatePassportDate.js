@@ -10,7 +10,7 @@ async function handler(req, res) {
         const contract = new ethers.Contract(Constants.contractAddress, Constants.contractAbi, signer);
         
         // Call the updatePassportDate function in the smart contract
-        await contract.updatePassportDates(index, issueDate, expiryDate);
+        await contract.updatePassportDate(index, issueDate, expiryDate);
 
         res.status(200).json({ message: "Passport dates updated successfully" });
     } catch (error) {

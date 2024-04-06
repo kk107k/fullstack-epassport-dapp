@@ -34,9 +34,35 @@ function PassportTable({ passports, setPassports }) {
     setLoading(false);
   };
 
+  const handleDeleteAllPassport = async (index) => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/deleteAllPassports", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ index })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error(error);
+      } else {
+        // Update passports state after deletion
+        const updatedPassports = passports.filter((passport, i) => i !== index);
+        setPassports(updatedPassports);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
+  };
+
   const handleUpdatePassportDates = async (index) => {
     setLoading(true);
     try {
+      const passportToUpdate = passports[index];
       const response = await fetch("/api/updatePassportDate", {
         method: "PUT",
         headers: {
@@ -44,15 +70,18 @@ function PassportTable({ passports, setPassports }) {
         },
         body: JSON.stringify({ index, issueDate: newIssueDate, expiryDate: newExpiryDate })
       });
-
+  
       if (!response.ok) {
         const error = await response.json();
         console.error(error);
       } else {
-        // Update the issue date and expiry date of the passport
+        // Update the issue date and expiry date of the passport locally
         const updatedPassports = [...passports];
-        updatedPassports[index].issueDate = newIssueDate;
-        updatedPassports[index].expiryDate = newExpiryDate;
+        updatedPassports[index] = {
+          ...passportToUpdate,
+          issueDate: newIssueDate,
+          expiryDate: newExpiryDate
+        };
         setPassports(updatedPassports);
         // Reset editIndex after updating
         setEditIndex(null);
@@ -62,6 +91,7 @@ function PassportTable({ passports, setPassports }) {
     }
     setLoading(false);
   };
+  
 
   const filteredPassports = passports.filter(passport => {
     if (searchValue === "") return true;
