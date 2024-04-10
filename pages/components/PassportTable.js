@@ -125,7 +125,6 @@ function PassportTable({ passports, setPassports }) {
             <option value="issueDate">Issue Date</option>
             <option value="expiryDate">Expiry Date</option>
             <option value="passportAddress">Passport Address</option>
-          {/* Add options for other attributes here */}
         </select>
         <input type="text" value={searchValue} onChange={e => setSearchValue(e.target.value)} placeholder={`Search by ${searchCriteria}`} />
       </div>
@@ -150,7 +149,7 @@ function PassportTable({ passports, setPassports }) {
               <td>{passport.name}</td>
               <td>{passport.passportNumber}</td>
               <td>{passport.nationality}</td>
-              <td>{formatDate(passport.birthDate)}</td> {/* Format birthDate */}
+              <td>{formatDate(passport.birthDate)}</td> 
               <td>{passport.placeOfBirth}</td>
               <td>{passport.sex}</td>
               <td>{editIndex === index ? <input type="text" value={newIssueDate} onChange={e => setNewIssueDate(e.target.value)} /> : formatDate(passport.issueDate)}</td>

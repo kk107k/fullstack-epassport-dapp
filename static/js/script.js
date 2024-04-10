@@ -48,7 +48,7 @@ function register(){
         if(data.success){
             alert("Registered successfully.");
             const userName = data.name; // Retrieve the associated name from the response
-            window.location.href = 'http://localhost:3000'; // Redirect to localhost:3000
+            window.location.href = `http://localhost:3000/HomePage?user_name=${userName}`; // Redirect to localhost:3000
         }else{
             alert("Registration failed.");
         }
@@ -80,7 +80,7 @@ function login(){
         if (data.success) {
             alert("Login successful");
             const userName = data.name;  // Extracting the name from the response
-            window.location.href = 'http://localhost:3000'; // Redirect to localhost:3000
+            window.location.href = `http://localhost:3000/HomePage?user_name=${userName}`; // Redirect to localhost:3000
         } else {
             alert("Login failed, please try again");
         }

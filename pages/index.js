@@ -1,46 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { ethers } from 'ethers';
-import * as Constants from "../Utils/config";
-import PassportForm from "./components/PassportForm";
-import PassportTable from "./components/PassportTable";
+import React from "react";
+import { useRouter } from "next/router";
 import styles from '../styles/Home.module.css';
 
 function App() {
 
-  const [passports, setPassports] = useState([]);
+  const router = useRouter();
 
-  useEffect(() => {
-    const connectToMetamask = async () => {
-      try {
-        if (window.ethereum) {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const signer = provider.getSigner();
-          const contractInstance = new ethers.Contract(Constants.contractAddress, Constants.contractAbi, signer);
-          const passports = await contractInstance.getAllPassports();
-          console.log("Passports:", passports);
-          console.log("Connected");
-          const formattedPassports = passports.map(passport => ({
-            ...passport,
-            birthDate: passport.birthDate.toString(),
-            issueDate: passport.issueDate.toString(),
-            expiryDate: passport.expiryDate.toString()
-          }));
-          setPassports(formattedPassports);
-        } else {
-          console.log("Metamask not found");
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  const handleNavigate = (route) => {
+    router.push(route);
+  };
 
-    connectToMetamask();
-  }, []);
 
   return (
-    <div class={styles.body}>
-      <PassportForm setPassports={setPassports} />
-      <PassportTable passports={passports} setPassports={setPassports} />
+    <div className={styles.body}>
+       <button onClick={() => handleNavigate("/PassportFormPage")}>Passport Form</button>
+      <button onClick={() => handleNavigate("/PassportTablePage")}>Passport Table</button>
     </div>
   );
 }
