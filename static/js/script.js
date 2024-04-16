@@ -44,7 +44,7 @@ function register(){
         if (data.success) {
             alert("Registered successfully.");
             const userName = data.name; // Retrieve the associated name from the response
-            window.location.href = `http://localhost:3000/`; // Redirect to localhost:3000
+            window.location.href = `http://127.0.0.1:5000/organizationLogin`; // Redirect to localhost:3000
         }else{
             alert("Registration failed.");
         }
@@ -82,6 +82,40 @@ function login(){
         console.log("Error logging in user", error);
     });
 }
+
+function adminLogin() {
+    const username = document.getElementById('adminUsername').value;
+    const password = document.getElementById('adminPassword').value;
+    const photo = dataURItoBlob(canvas.toDataURL());
+
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('photo', photo, 'login.jpg');
+    console.log(formData)
+
+    fetch('/adminlogin', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Admin login successful.");
+            window.location.href = `http://127.0.0.1:5000/adminRegister`; // Redirect to admin dashboard
+            console.log(formData)
+        } else {
+            alert("Admin login failed: " + data.error);
+            console.log(formData)
+        }
+    })
+    .catch(error => {
+        console.log("Error logging in admin", error);
+    });
+    console.log(formData)
+
+}
+
 
 function logout() {
     fetch('/logout', {

@@ -8,35 +8,9 @@
 </head>
 
 <body>
-    <video id="video" autoplay></video>
-    <br>
 
-    <button onclick="capture()">Take photo</button>
-    <br>
-
-    <canvas id="canvas" width="640" height="480">
-
-    </canvas>
-
-    <br>
-    <h3>Register Account</h3>
-    <label for="regUsername">Username:</label>
-    <input type="text" id="regUsername" required>
-    <br>
-    <label for="regPassword">Password:</label>
-    <input type="password" id="regPassword" required>
-    <br>
-    <button onclick="register()">Register</button>
-
-    <h3>Login</h3>
-    <label for="loginUsername">Username:</label>
-    <input type="text" id="loginUsername" required>
-    <br>
-    <label for="loginPassword">Password:</label>
-    <input type="password" id="loginPassword" required>
-    <br>
-    <button onclick="login()">Login</button>
-
+    <button><a href="adminLogin">admin login</a></button>
+    <button><a href="organizationLogin">organzation login</a></button>
 
     <script src="{{url_for('static',filename='js/script.js')}}"></script>
 </body>

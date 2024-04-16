@@ -11,17 +11,59 @@ CORS(app)
 app.secret_key = 'kiarash'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
 
+admin_accounts = {
+    'admin_accounts': {
+        'admin_username': 'kiarash',
+        'admin_password': '123'
+    }
+}
+
+admin_accounts_faceID = './static/uploads/kiarash.jpg'
+
+@app.route('/adminlogin', methods=['POST'])
+def admin_login():
+    global last_authenticated_user
+
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    print(username, password)
+    print(admin_accounts['admin_accounts']['admin_password'])
+    if not username or not password:
+        return jsonify({'success': False, 'error': 'Username and password are required'})
+
+    if username == admin_accounts['admin_accounts']['admin_username'] and password == admin_accounts['admin_accounts']['admin_password']:
+        # Load the hardcoded image for comparison
+        admin_image = face_recognition.load_image_file(admin_accounts_faceID)
+        admin_face_encoding = face_recognition.face_encodings(admin_image)
+
+        # Check if face encoding is available
+        if not admin_face_encoding:
+            return jsonify({'success': False, 'error': 'Could not encode the face in the admin image'})
+
+        # Load the login face image
+        photo = request.files['photo']
+        login_image = face_recognition.load_image_file(photo)
+        login_face_encodings = face_recognition.face_encodings(login_image)
+
+        # Check if face encoding is available
+        if not login_face_encodings:
+            return jsonify({'success': False, 'error': 'Could not encode the face in the provided photo'})
+
+        # Compare faces
+        if face_recognition.compare_faces(admin_face_encoding, login_face_encodings[0]):
+            # Admin authentication successful
+            last_authenticated_user = username
+            session['logged_in'] = True
+            session['user_name'] = username
+            session.permanent = True
+            return jsonify({'success': True, 'name': username, 'role': 'admin'})
+        else:
+            return jsonify({'success': False, 'error': 'Face not recognized'})
+    else:
+        return jsonify({'success': False, 'error': 'Invalid username or password'})
 
 registered_data = {}  # Dictionary to store registered data (photo filename associated with the provided name)
-
-
-@app.route('/authenticationData', methods=['GET'])
-def get_authentication_data():
-    if last_authenticated_user:
-        return jsonify({'success': True, 'name': last_authenticated_user})
-    else:
-        return jsonify({'success': False, 'name': ''})
-
 
 @app.route('/')  
 def index():
@@ -105,7 +147,7 @@ def login():
             registered_image = face_recognition.load_image_file(registered_photo)
             registered_face_encodings = face_recognition.face_encodings(registered_image)
 
-    if registered_face_encodings and face_recognition.compare_faces(registered_face_encodings, login_face_encodings[0]):
+            if registered_face_encodings and face_recognition.compare_faces(registered_face_encodings, login_face_encodings[0]):
                 last_authenticated_user = username
                 session['logged_in'] = True
                 session['user_name'] = username
@@ -114,10 +156,37 @@ def login():
 
     return jsonify({'success': False, 'error': 'Invalid credentials or face not recognized'})
 
+
+@app.route('/authenticationData', methods=['GET'])
+def get_authentication_data():
+    if last_authenticated_user:
+        return jsonify({'success': True, 'name': last_authenticated_user})
+    else:
+        return jsonify({'success': False, 'name': ''})
+
+
 @app.route('/success')
 def success():
     user_name = request.args.get('user_name')
     return render_template('success.html', user_name=user_name)
+
+@app.route('/adminLogin')  
+def adminLoginPage():
+    return render_template('adminLogin.html')  
+
+@app.route('/organizationLogin')  
+def organizationLoginPage():
+    return render_template('organizationLogin.html')  
+
+@app.route('/adminRegister')
+def adminRegistrationPage():
+    if 'logged_in' in session and session['logged_in'] and 'user_name' in session:
+        # User is logged in, render the admin registration page
+        return render_template('adminRegister.html')
+    else:
+        # User is not logged in, redirect to the admin login page
+        return redirect('/')
+
 
 @app.route('/logout')
 def logout():
