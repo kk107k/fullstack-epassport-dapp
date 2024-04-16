@@ -5,10 +5,24 @@ import { ethers } from 'ethers';
 import * as Constants from "../Utils/config";
 import PassportForm from "./components/PassportForm";
 import styles from '../styles/Home.module.css';
-import withAuth from './withAuth'; // Import the withAuth HOC
 
 const PassportFormPage = () => {
+
     const [passports, setPassports] = useState([]);
+    const [authenticated, setAuthenticated] = useState(false);
+
+    useEffect(() => {
+      fetch('http://127.0.0.1:5000/authenticationData')
+        .then(response => response.json())
+        .then(data => {
+          setAuthenticated(data.success);
+          setUserName(data.name);
+        })
+        .catch(error => {
+          console.error('Error fetching authentication data:', error);
+        });
+    }, []);
+
 
     useEffect(() => {
         const connectToMetamask = async () => {
@@ -38,11 +52,24 @@ const PassportFormPage = () => {
         connectToMetamask();
       }, []);
 
-    return (
-        <div class={styles.body}>
-            <PassportForm setPassports={setPassports} />
-        </div>
-    )
+    const renderContent = () => {
+        if (authenticated) {
+          return (
+            <div class={styles.body}>
+              <PassportForm passports={passports} setPassports={setPassports} />
+          </div>
+          );
+        } else {
+          return <h1>AUTHENTICATED USERS ONLY</h1>;
+        }
+      };
+
+  return (
+  
+    <div class={styles.body}>
+      {renderContent()}
+    </div>
+  )
 };
 
-export default withAuth(PassportFormPage); // Wrap the page with the withAuth HOC
+export default PassportFormPage;

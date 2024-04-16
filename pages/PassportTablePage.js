@@ -7,7 +7,21 @@ import styles from '../styles/Home.module.css';
 
 const PassportTablePage = () => {
 
+
     const [passports, setPassports] = useState([]);
+    const [authenticated, setAuthenticated] = useState(false);
+
+    useEffect(() => {
+      fetch('http://127.0.0.1:5000/authenticationData')
+        .then(response => response.json())
+        .then(data => {
+          setAuthenticated(data.success);
+          setUserName(data.name);
+        })
+        .catch(error => {
+          console.error('Error fetching authentication data:', error);
+        });
+    }, []);
 
     useEffect(() => {
         const connectToMetamask = async () => {
@@ -37,11 +51,24 @@ const PassportTablePage = () => {
         connectToMetamask();
       }, []);
 
+
+      const renderContent = () => {
+        if (authenticated) {
+          return (
+            <div class={styles.body}>
+              <PassportTable passports={passports} setPassports={setPassports} />
+          </div>
+          );
+        } else {
+          return <h1>AUTHENTICATED USERS ONLY</h1>;
+        }
+      };
+
   return (
   
     <div class={styles.body}>
-    <PassportTable passports={passports} setPassports={setPassports} />
-</div>
+      {renderContent()}
+    </div>
   )
 };
 

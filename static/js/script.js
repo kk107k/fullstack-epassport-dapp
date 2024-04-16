@@ -26,17 +26,14 @@ function capture() {
 }
 
 function register(){
-    const name = nameInput.value;
+    const username = document.getElementById('regUsername').value;
+    const password = document.getElementById('regPassword').value;
     const photo = dataURItoBlob(canvas.toDataURL());
 
-    if(!name || !photo){
-        alert("Name and photo are required.");
-        return;
-    }
-
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('photo', photo, `${name}.jpg`);
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('photo', photo, `${username}.jpg`);
 
     fetch('/register', {
         method: 'POST',
@@ -44,11 +41,10 @@ function register(){
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
-        if(data.success){
+        if (data.success) {
             alert("Registered successfully.");
             const userName = data.name; // Retrieve the associated name from the response
-            window.location.href = `http://localhost:3000/HomePage?user_name=${userName}`; // Redirect to localhost:3000
+            window.location.href = `http://localhost:3000/`; // Redirect to localhost:3000
         }else{
             alert("Registration failed.");
         }
@@ -59,17 +55,14 @@ function register(){
 }
 
 function login(){
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
     const photo = dataURItoBlob(canvas.toDataURL());
 
-    if(!photo){
-        alert("photo required please")
-        return
-    }
-
     const formData = new FormData();
-    formData.append('photo', photo, `login.jpg`);
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('photo', photo, 'login.jpg');
 
     fetch('/login', {
         method: 'POST',
@@ -78,15 +71,29 @@ function login(){
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert("Login successful");
+            alert("Login successful.");
             const userName = data.name;  // Extracting the name from the response
-            window.location.href = `http://localhost:3000/HomePage?user_name=${userName}`; // Redirect to localhost:3000
+            window.location.href = `http://localhost:3000/`; // Redirect to localhost:3000
         } else {
-            alert("Login failed, please try again");
+            alert("Login failed: " + data.error);
         }
     })
     .catch(error => {
         console.log("Error logging in user", error);
+    });
+}
+
+function logout() {
+    fetch('/logout', {
+        method: 'GET'
+    })
+    .then(response => {
+        if(response.ok) {  // Check if the response status is OK (200-299)
+            window.location.href = "/";  // Redirect to the home page
+        }
+    })
+    .catch(error => {
+        console.log("Error logging out", error);
     });
 }
 
