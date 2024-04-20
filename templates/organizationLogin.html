@@ -3,30 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     <title>Organization Login</title>
 </head>
 <body>
 
-    <video id="video" autoplay></video>
-    <br>
+    <nav class="navbar">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/adminLogin">Admin</a></li>
+            <li><a href="/adminRegister">Admin Register</a></li>
+            <li><a id="active" href="/organizationLogin">Login</a></li>
+        </ul>
+    </nav>
 
-    <button onclick="capture()">Take photo</button>
-    <br>
+    <video id="video-background" autoplay muted loop>
+        <source src="{{url_for('static', filename='assets/ePassportTemplatee.mp4')}}" type="video/mp4">
+    </video>
 
-    <canvas id="canvas" width="640" height="480">
 
-    </canvas>
-    
-    <h3>Login</h3>
-    <label for="loginUsername">Username:</label>
-    <input type="text" id="loginUsername" required>
-    <br>
-    <label for="loginPassword">Password:</label>
-    <input type="password" id="loginPassword" required>
-    <br>
-    <button onclick="login()">Login</button>
-
-    <script src="{{url_for('static',filename='js/script.js')}}"></script>
+    <div class="container">
+        <div class="container-left">
+            <div class="video-container">
+                <video class="face-id" id="video" autoplay></video>
+                <canvas id="canvas" style="display: none; height: 350px; width: 500px;">
+                </canvas>    
+            </div>
+            <div id="container-buttons">
+                <button onclick="capture()">Take photo</button>
+            </div>
+        </div>
+        <div class="container-right">
+            <h3>Admin Login</h3>
+            <div id="container-input">
+                <label for="loginUsername">Username:</label>
+                <input type="text" id="loginUsername" required>
+            </div>
+            <div id="container-input">
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" required>
+            </div>
+            <div id="container-input">
+                <label for="loginMetaMaskAddress">MetaMask Address:</label>
+                <input type="text" id="loginMetaMaskAddress" name="loginMetaMaskAddress">
+            </div>
+            <div id="container-buttons">
+                 <button id="loginButton">Login</button>
+            </div>  
+        </div>
+    </div>
+    <script src="../static/js/metamaskVerification.js"></script>
+    <script src="../static/js/script.js"></script>
 
 </body>
 </html>

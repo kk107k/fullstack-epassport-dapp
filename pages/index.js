@@ -15,6 +15,8 @@ function App() {
 
   useEffect(() => {
     fetch('http://127.0.0.1:5000/authenticationData')
+    fetch('http://127.0.0.1:5000/authenticationAdmin')
+
       .then(response => response.json())
       .then(data => {
         setAuthenticated(data.success);
@@ -29,9 +31,17 @@ function App() {
   const renderContent = () => {
     if (authenticated) {
       return (
-        <div className={styles.body}>
-           <button onClick={() => handleNavigate("/PassportFormPage")}>Passport Form</button>
-          <button onClick={() => handleNavigate("/PassportTablePage")}>Passport Table</button>
+        <div className={styles.container}>
+            <video id={styles.videoBackground} autoPlay muted loop>
+            <source src="/assets/ePassportTemplate.mp4" type="video/mp4" />
+            </video>
+          <div>
+            <h1>Welcome {userName}</h1>
+              <div id={styles.containerButtons}>
+                <button><a href="/PassportFormPage">Passport Form</a></button>
+                <button><a href="/PassportTablePage">Passport Table</a></button>
+              </div>
+          </div>
         </div>
       );
     } else {

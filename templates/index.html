@@ -4,13 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     <title>face web login</title>
 </head>
 
 <body>
 
-    <button><a href="adminLogin">admin login</a></button>
-    <button><a href="organizationLogin">organzation login</a></button>
+    <video id="video-background" autoplay muted loop>
+        <source src="{{url_for('static', filename='assets/ePassportTemplatee.mp4')}}" type="video/mp4">
+    </video>
+    <div id="content">
+        <h1>Blockchain Passport Database</h1>
+        <div>
+            <button><a href="adminLogin">admin login</a></button>
+            <button><a href="organizationLogin">organzation login</a></button>  
+        </div>
+    </div>
+    
 
     <script src="{{url_for('static',filename='js/script.js')}}"></script>
 </body>

@@ -13,6 +13,7 @@ const PassportFormPage = () => {
 
     useEffect(() => {
       fetch('http://127.0.0.1:5000/authenticationData')
+      fetch('http://127.0.0.1:5000/authenticationAdmin')
         .then(response => response.json())
         .then(data => {
           setAuthenticated(data.success);

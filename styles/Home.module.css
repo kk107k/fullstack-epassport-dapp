@@ -1,206 +1,178 @@
-.body {
-  background-color: #1F1C21;
-  color: white;
-}
-
-.navbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #333;
-  color: white;
-  height: 60px;
-}
-
-.navbar a {
-  color: white;
-  margin: 0 10px;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  font-size: 24px;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.form span {
-  margin-bottom: 10px;
-  font-size: 18px;
-}
-
-.form input[type="text"] {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.form input[type="submit"] {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-  font-size: 18px;
-}
-
-.form input[type="submit"]:hover {
-  background-color: #45a049;
-}
-
-.formbody {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 20px;
-  width: 100%;
-}
-
-.formbody input[type="text"]{
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 45%;
-}
-
-.table {
-  border-collapse: collapse;
-  margin-top: 20px;
-  width: 50%;
-}
-
-.table th,
-.table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
-
-.table th {
-  background-color: #f2f2f2;
-}
-
-.table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-.button {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #0070f3;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: #0b84ff;
-}
-
-/* Home.module.css */
-
-.spinnerContainer {
+#videoBackground {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.5); /* Semi-transparent grey cover */
+  z-index: -1; /* Ensure the video stays behind other content */
+}
+
+.container,
+.containerTable{
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Ensure spinner is on top of other content */
-}
-
-
-.spinner {
-  border: 4px solid rgba(255, 255, 255, 0.3); /* Lighter border */
-  border-left-color: #f16363; /* Blue border */
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+  flex-direction: row;
+  margin: 30px auto;
+  width: 100%;
+  z-index: 1;
+  padding: 20px;
   }
+
+.containerTable{
+  flex-direction: column;
 }
+
+.container h1,
+.containerTable h1{
+  font-size: 50px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0;
+  color:white;
+}
+
+.container button {
+  background-color: #00ffdd27; /* Green */
+  border: 2px solid #00ffdd;
+  border-radius: 10px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+  cursor: pointer;
+  width: 250px;
+}
+
+.container button:hover {
+  background-color: #00ffdd; /* Green */
+} 
+
+.container a {
+color: white;
+font-family: 'Times New Roman', Times, serif;
+text-transform: capitalize;
+}
+
+.search {
+  width: 100%;
+  float: right;
+  margin-bottom: 16px;
+  margin-top: -70px;
+}
+
+.search h1 {
+  float: left;
+  font-size: 40px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 100;
+  text-transform: none;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.944)
+}
+
+.search input{
+  width: 300px;
+  padding: 12px;
+  border: none;
+  background-color: #42324E;
+  border-radius: 4px;
+  margin-top: 6px;
+  float: right;
+  margin-bottom: 16px;
+}
+
+.search input::placeholder {
+  color: rgba(255, 255, 255, 0.479);
+}
+.search select {
+  padding: 12px;
+  border-radius: 4px;
+  margin: 6px 3px 16px 0px;
+  background-color: #42324E;
+  border: none;
+  float: right;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.479);
+}
+
 
 .table {
-  color: #C6BACD;
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  text-align: center;
+  color: #fff;
+  border: 1px dashed #42324E;
 }
 
-.table tbody tr {
-  border-bottom: 1px solid #9000ff; /* Darker border between rows */
+
+.table th,
+.table td {
+  padding: 12px 0px;
 }
 
 .table th {
-  background-color: #2a1138; /* heading (top row) of table */
-}
-
-/* Table body styles */
-.table tbody tr:nth-child(odd) {
-  background-color: #42324E; /* table body odd numbered rows */
-  border: 3px solid #42324E;
+  background-color: #42324E;
 }
 
 .table tbody tr:nth-child(even) {
-  background-color: #362D3B; /* table body even numbered rows */
+  background-color: #392744;
 }
 
-
-.table td,
-.table th {
-  border: 3px solid #42324E;
+.table tbody tr:hover {
+  background-color: #2c1e35;
 }
 
-
-.wrapper {
-  display: flex;
-  padding: 8px;
-  border-radius: 4px;
-  background-color: rgb(178, 17, 17);
-}
-
-.custominput {
-  flex-grow: 1;
-}
-
-.custominput input[type=radio] {
-  display: none;
-}
-
-.custominput label {
-  display: block;
-  padding: 6px 8px;
+.button {
+  background-color: #555;
   color: #fff;
-  font-weight: bold;
-  text-align: center;
-  transition : all .4s 0s ease;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-right: 4px;
 }
 
-.custominput input[type=radio]:checked + label {
-  background-color: #f5f5f5;
-  color: #000;
-  border-radius: 4px;
+.button:hover {
+  background-color: #777;
+}
+
+
+
+/* Navbar styling */
+.Navbar {
+  background-color: #0000005d; /* Background color */
+  overflow: hidden;
+}
+
+.Navbar ul {
+  list-style-type: none;
+  margin: 8px 110px 0px 0px;
+  padding: 0;
+}
+
+.Navbar li {
+  float: right;
+}
+
+.Navbar li a {
+  display: block;
+  color: white; 
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.Navbar li a:hover {
+  border-bottom: 2px solid #00ffdd68;
+  color: rgb(255, 255, 255); 
+}
+
+.active{
+  border-bottom: 2px solid #00ffdd;
+  color: rgb(255, 255, 255); 
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from 'ethers';
 import * as Constants from "../Utils/config";
 import PassportTable from "./components/PassportTable";
+import Navbar from "./components/Navbar";
 import styles from '../styles/Home.module.css';
 
 
@@ -13,6 +14,7 @@ const PassportTablePage = () => {
 
     useEffect(() => {
       fetch('http://127.0.0.1:5000/authenticationData')
+      fetch('http://127.0.0.1:5000/authenticationAdmin')
         .then(response => response.json())
         .then(data => {
           setAuthenticated(data.success);
@@ -55,9 +57,13 @@ const PassportTablePage = () => {
       const renderContent = () => {
         if (authenticated) {
           return (
-            <div class={styles.body}>
-              <PassportTable passports={passports} setPassports={setPassports} />
+            <div>
+              <Navbar />
+            <div class={styles.containerTable}>
+              <PassportTable passports={passports} showActions={false} showAddress={false} setPassports={setPassports} />
           </div>
+
+            </div>
           );
         } else {
           return <h1>AUTHENTICATED USERS ONLY</h1>;

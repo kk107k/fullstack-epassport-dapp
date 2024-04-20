@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from '../../styles/Home.module.css';
 
-function PassportTable({ passports, setPassports }) {
+function PassportTable({ passports, setPassports, showAddress, showActions  }) {
   const [loading, setLoading] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [newIssueDate, setNewIssueDate] = useState("");
@@ -79,7 +79,7 @@ function PassportTable({ passports, setPassports }) {
         },
         body: JSON.stringify({ index, issueDate: newIssueDate, expiryDate: newExpiryDate })
       });
-  
+
       if (!response.ok) {
         const error = await response.json();
         console.error(error);
@@ -100,7 +100,7 @@ function PassportTable({ passports, setPassports }) {
     }
     setLoading(false);
   };
-  
+
 
   const filteredPassports = passports.filter(passport => {
     if (searchValue === "") return true;
@@ -109,69 +109,77 @@ function PassportTable({ passports, setPassports }) {
 
   return (
     <div className={styles.container}>
-        {loading && (
+      {loading && (
         <div className={styles.spinnerContainer}>
           <div className={styles.spinner}></div>
         </div>
       )}
+      <div>
       <div className={styles.search}>
+        <h1>Database</h1>
+        <input type="text" value={searchValue} onChange={e => setSearchValue(e.target.value)} placeholder={`Search by ${searchCriteria}`} />
         <select value={searchCriteria} onChange={e => setSearchCriteria(e.target.value)}>
           <option value="name">Name</option>
           <option value="passportNumber">Passport Number</option>
           <option value="nationality">Nationality</option>
-            <option value="birthDate">Birth Date</option>
-            <option value="placeOfBirth">Place of Birth</option>
-            <option value="Sex">Sex</option>
-            <option value="issueDate">Issue Date</option>
-            <option value="expiryDate">Expiry Date</option>
-            <option value="passportAddress">Passport Address</option>
+          <option value="birthDate">Birth Date</option>
+          <option value="placeOfBirth">Place of Birth</option>
+          <option value="Sex">Sex</option>
+          <option value="issueDate">Issue Date</option>
+          <option value="expiryDate">Expiry Date</option>
+          <option value="passportAddress">Passport Address</option>
         </select>
-        <input type="text" value={searchValue} onChange={e => setSearchValue(e.target.value)} placeholder={`Search by ${searchCriteria}`} />
       </div>
       <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Passport Number</th>
-            <th>Nationality</th>
-            <th>Birth Date</th>
-            <th>Place of Birth</th>
-            <th>Sex</th>
-            <th>Issue Date</th>
-            <th>Expiry Date</th>
-            <th>Passport Address</th>
-            <th>Action</th>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Passport Number</th>
+          <th>Nationality</th>
+          <th>Birth Date</th>
+          <th>Place of Birth</th>
+          <th>Sex</th>
+          <th>Issue Date</th>
+          <th>Expiry Date</th>
+          {showAddress && <th>Passport Address</th>}
+          {showActions && <th>Action</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {filteredPassports.map((passport, index) => (
+          <tr key={index}>
+            <td>{passport.name}</td>
+            <td>{passport.passportNumber}</td>
+            <td>{passport.nationality}</td>
+            <td>{formatDate(passport.birthDate)}</td>
+            <td>{passport.placeOfBirth}</td>
+            <td>{passport.sex}</td>
+            <td>{editIndex === index ? <input type="text" value={newIssueDate} onChange={e => setNewIssueDate(e.target.value)} /> : formatDate(passport.issueDate)}</td>
+            <td>{editIndex === index ? <input type="text" value={newExpiryDate} onChange={e => setNewExpiryDate(e.target.value)} /> : formatDate(passport.expiryDate)}</td>
+            {showAddress && <td>{passport.passportAddress}</td>}
+            <td>
+              {showActions && (
+                <>
+                  {editIndex === index ? (
+                    <>
+                      <button className={styles.button} onClick={() => handleUpdatePassportDates(index)}>Update</button>
+                      <button className={styles.button} onClick={() => setEditIndex(null)}>Cancel</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className={styles.button} onClick={() => setEditIndex(index)}>Edit</button>
+                      <button className={styles.button} onClick={() => handleDeletePassport(index)}>Delete</button>
+                      <button className={styles.button} onClick={handleDeleteAllPassports}>Delete All Passports</button>
+                    </>
+                  )}
+                </>
+              )}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {filteredPassports.map((passport, index) => (
-            <tr key={index}>
-              <td>{passport.name}</td>
-              <td>{passport.passportNumber}</td>
-              <td>{passport.nationality}</td>
-              <td>{formatDate(passport.birthDate)}</td> 
-              <td>{passport.placeOfBirth}</td>
-              <td>{passport.sex}</td>
-              <td>{editIndex === index ? <input type="text" value={newIssueDate} onChange={e => setNewIssueDate(e.target.value)} /> : formatDate(passport.issueDate)}</td>
-              <td>{editIndex === index ? <input type="text" value={newExpiryDate} onChange={e => setNewExpiryDate(e.target.value)} /> : formatDate(passport.expiryDate)}</td>
-              <td>{passport.passportAddress}</td>
-              <td>
-                {editIndex === index ? (
-                  <>
-                    <button className={styles.button} onClick={() => handleUpdatePassportDates(index)}>Update</button>
-                    <button className={styles.button} onClick={() => setEditIndex(null)}>Cancel</button>
-                  </>
-                ) : (
-                  <>
-                    <button className={styles.button} onClick={() => setEditIndex(index)}>Edit</button>
-                    <button className={styles.button} onClick={() => handleDeletePassport(index)}>Delete</button>
-                    <button className={styles.button} onClick={handleDeleteAllPassports}>Delete All Passports</button>                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        ))}
+      </tbody>
+    </table>     
+     </div>
     </div>
   );
 }

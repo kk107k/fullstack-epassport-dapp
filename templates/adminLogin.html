@@ -3,32 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <title>Admin Login</title>
 </head>
 <body>
 
-    <video id="video" autoplay></video>
-    <br>
+    <nav class="navbar">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a id="active" href="/adminLogin">Admin</a></li>
+            <li><a href="/adminRegister">Admin Register</a></li>
+            <li><a href="/organizationLogin">Login</a></li>
+        </ul>
+    </nav>
 
-    <button onclick="capture()">Take photo</button>
-    <br>
+    <video id="video-background" autoplay muted loop>
+        <source src="{{url_for('static', filename='assets/ePassportTemplatee.mp4')}}" type="video/mp4">
+    </video>
 
-    <canvas id="canvas" width="640" height="480">
+    <div class="container">
+        <div class="container-left">
+            <div class="video-container">
+                <video class="face-id" id="video" autoplay></video>
+                <canvas id="canvas" style="display: none; height: 350px; width: 500px;">
+                </canvas>    
+            </div>
+            <div id="container-buttons">
+                <button onclick="capture()">Take photo</button>
+            </div>
+        </div>
+        <div class="container-right">
+            <h3>Admin Login</h3>
+            <div id="container-input">
+                <label for="adminUsername">Username:</label>
+                <input type="text" id="adminUsername" required>
+            </div>
+            <div id="container-input">
+                <label for="adminPassword">Password:</label>
+                <input type="password" id="adminPassword" required>
+            </div>
+            <div id="container-input">
+                <label for="adminLoginMetaMaskAddress">MetaMask Address:</label>
+                <input type="text" id="adminLoginMetaMaskAddress" name="adminLoginMetaMaskAddress">
+            </div>
+            <div id="container-buttons">
+                <button id="adminLoginButton">Login</button>
+            </div>
+        </div>
+    </div>
 
-    </canvas>
 
-    <h3>Login</h3>
-    <label for="adminUsername">Username:</label>
-    <input type="text" id="adminUsername" required>
-    <br>
-    <label for="adminPassword">Password:</label>
-    <input type="password" id="adminPassword" required>
-    <br>
-    <button onclick="adminLogin()">Login</button>
-
-
-    <script src="{{url_for('static',filename='js/script.js')}}"></script>
-
+    <script src="../static/js/adminMetaMaskVerification.js"></script>
+    <script src="../static/js/script.js"></script>
     
 </body>
 </html>
