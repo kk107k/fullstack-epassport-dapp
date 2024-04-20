@@ -60,7 +60,7 @@ const PassportTablePage = () => {
             <div>
               <Navbar />
             <div class={styles.containerTable}>
-              <PassportTable passports={passports} showActions={false} showAddress={false} setPassports={setPassports} />
+              <PassportTable passports={passports} showActions={false} showAddress={false} showElse={true} setPassports={setPassports} />
           </div>
 
             </div>

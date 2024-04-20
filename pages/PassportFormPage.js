@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { ethers } from 'ethers';
 import * as Constants from "../Utils/config";
 import PassportForm from "./components/PassportForm";
+import PassportTable from "./components/PassportTable";
+import Navbar from "./components/Navbar";
 import styles from '../styles/Home.module.css';
 
 const PassportFormPage = () => {
@@ -56,9 +58,18 @@ const PassportFormPage = () => {
     const renderContent = () => {
         if (authenticated) {
           return (
-            <div class={styles.body}>
-              <PassportForm passports={passports} setPassports={setPassports} />
+            <div>
+              <Navbar />
+              <div class={styles.passportFormPageContainer}>
+             <div class={styles.passportFormContainer}>
+                <PassportForm passports={passports} setPassports={setPassports} />
+              </div>
+              <div className={styles.passportTableContainer}>
+                <PassportTable passports={passports} showActions={false} showAddress={false} showElse={false} setPassports={setPassports} />
+              </div>
           </div>
+
+            </div>
           );
         } else {
           return <h1>AUTHENTICATED USERS ONLY</h1>;

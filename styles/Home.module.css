@@ -6,6 +6,24 @@
   z-index: -1; /* Ensure the video stays behind other content */
 }
 
+.passportFormPageContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: start;
+  margin: auto;
+  width: 90%;
+  height: 100vh;
+}
+
+.passportTableContainer {
+  width: 100%;
+  margin-top: 40px;
+}
+
+.passportFormContainer {
+  width: 90%;
+}
 .container,
 .containerTable{
   position: relative;
@@ -64,7 +82,8 @@ text-transform: capitalize;
   margin-top: -70px;
 }
 
-.search h1 {
+.search h1,
+.form h1 {
   float: left;
   font-size: 40px;
   font-family: Arial, Helvetica, sans-serif;
@@ -75,7 +94,8 @@ text-transform: capitalize;
 }
 
 .search input{
-  width: 300px;
+  width: 40%;
+  max-width: 300px;
   padding: 12px;
   border: none;
   background-color: #42324E;
@@ -99,6 +119,28 @@ text-transform: capitalize;
   color: rgba(255, 255, 255, 0.479);
 }
 
+.tableButtons {
+  display: flex;
+
+}
+
+.table button {
+  background-color: unset;
+  border: none;
+  width: unset;
+  height: unset;
+  padding: 10px;
+  /* background-color: #00ffdd27;
+  border: 1px solid #00ffdd;
+  color: white;
+  padding: 2px 12px;
+  border-radius: 4px;
+  width: 100px;
+  height: 30px;
+  */
+  cursor: pointer;
+  font-size: 14px;
+}
 
 .table {
   width: 100%;
@@ -109,10 +151,10 @@ text-transform: capitalize;
   border: 1px dashed #42324E;
 }
 
-
 .table th,
 .table td {
-  padding: 12px 0px;
+  padding: 12px 10px;
+  border: 1px dashed #ffffff46;
 }
 
 .table th {
@@ -175,4 +217,163 @@ text-transform: capitalize;
 .active{
   border-bottom: 2px solid #00ffdd;
   color: rgb(255, 255, 255); 
+}
+
+/* Home.module.css */
+
+.spinnerContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.5); /* Semi-transparent grey cover */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure spinner is on top of other content */
+}
+
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3); /* Lighter border */
+  border-left-color: #f16363; /* Blue border */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.wrapper {
+  display: flex;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #392744;
+  margin-top: 8px;
+  height: 42px;
+}
+
+.custominput {
+  flex-grow: 1;
+}
+
+.custominput input[type=radio] {
+  display: none;
+}
+
+.custominput label {
+  display: block;
+  padding: 8px 0px;
+  width: 100%;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  transition : all .4s 0s ease;
+}
+
+.custominput input[type=radio]:checked + label {
+  background-color: #605169;
+  color: #ffffff;
+  border-radius: 4px;
+}
+
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  margin-top: 20px;
+  width: 90%;
+}
+
+.formContainer {
+  border: 1px dashed #42324E;
+  margin-top: 26px;
+}
+
+.form span {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.form input[type="submit"] {
+  background-color: #00ffdd27;
+  border: 1px solid #00ffdd;
+  color: white;
+  padding: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+.form input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+
+.formTop {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0px 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.form label {
+  color: white;
+}
+
+.formTop input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.formbody {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0px 20px;
+  width: 100%;
+}
+
+.formInput {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+}
+.formInput select{
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.formInput input[type="date"]{
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.form input[type="submit"] {
+  margin: auto;
+  margin-top: 20px;
+  width: 90%;
+
 }

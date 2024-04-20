@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from 'ethers';
 import * as Constants from "../Utils/config";
 import PassportTable from "./components/PassportTable";
+import Navbar from "./components/Navbar";
 import styles from '../styles/Home.module.css';
 
 
@@ -54,9 +55,12 @@ const AdminDatabase = () => {
       const renderContent = () => {
         if (authenticated) {
           return (
-            <div class={styles.body}>
-              <PassportTable passports={passports} showActions={true} showAddress={true} setPassports={setPassports} />
-          </div>
+            <div>
+                <Navbar />
+                <div class={styles.container}>
+                <PassportTable passports={passports} showActions={true} showAddress={true} showElse={true} setPassports={setPassports} />
+            </div>
+            </div>
           );
         } else {
           return <h1>AUTHENTICATED USERS ONLY</h1>;

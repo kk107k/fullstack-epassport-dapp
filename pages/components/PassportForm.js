@@ -17,7 +17,9 @@ function PassportForm({ setPassports }) {
 
   useEffect(() => {
     const countrySelect = new CountrySelect('nationality');
+    const placeOfBirthSelect = new CountrySelect('placeOfBirth');
     countrySelect.generateOptions();
+    placeOfBirthSelect.generateOptions();
   }, []);
 
   const handleChange = (event) => {
@@ -65,22 +67,42 @@ function PassportForm({ setPassports }) {
   };
 
   return (
-    <div className={styles.container}>
+    <div>
         {loading && (
         <div className={styles.spinnerContainer}>
           <div className={styles.spinner}></div>
         </div>
       )}
       <form className={styles.form} onSubmit={handleSubmit}>
-        <div>
-          <label for="name">Full name</label>
-          <input type="text" id="name" name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
-          <label for="passportNumber">Passport Number</label>
-          <input type="text" id="passportNumber" name="passportNumber" placeholder="Passport Number" value={formData.passportNumber} onChange={handleChange} />
+        <h1>Passport Form</h1>
+        <div className={styles.formContainer}>
+          <div className={styles.formTop}>
+          <div className={styles.formInput}>
+            <label for="name">Full name</label>
+            <input type="text" id="name" name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
+          </div>
+          <div className={styles.formInput}>
+            <label for="passportNumber">Passport Number</label>
+            <input type="text" id="passportNumber" name="passportNumber" placeholder="Passport Number" value={formData.passportNumber} onChange={handleChange} />
+          </div>
         </div> 
         <div className={styles.formbody}>
-          <label for="nationality">Nationality</label>
-          <select id="nationality" name="nationality" value={formData.nationality} onChange={handleChange}></select>
+          <div className={styles.formInput}>
+            <label for="nationality">Nationality</label>
+            <select id="nationality" name="nationality" value={formData.nationality} onChange={handleChange}></select>
+          </div>
+          <div className={styles.formInput}>
+            <label for="placeOfBirth">Place Of Birth</label>
+            <select id="placeOfBirth" name="placeOfBirth" value={formData.placeOfBirth} onChange={handleChange}></select>
+          </div>
+        </div>
+        <div className={styles.formbody}>
+          <div className={styles.formInput}>
+            <label for="birthDate">Birth Date</label>
+            <input type="date" name="birthDate" placeholder="Birth Date" value={formData.birthDate} onChange={handleChange} />
+          </div>
+          <div  className={styles.formInput}>
+          <label for="sex">Sex</label>
           <div class={styles.wrapper}>
             <div class={styles.custominput}>
               <input type="radio" id="female" name="sex"  value="female" checked={formData.sex === "female"} onChange={handleChange}/>
@@ -91,14 +113,18 @@ function PassportForm({ setPassports }) {
               <label for="male">Male</label>
             </div>
           </div>
+          </div>
         </div>
         <div className={styles.formbody}>
-          <input type="date" name="birthDate" placeholder="Birth Date" value={formData.birthDate} onChange={handleChange} />
-          <input type="text" name="placeOfBirth" placeholder="Place of Birth" value={formData.placeOfBirth} onChange={handleChange} />
+          <div  className={styles.formInput}>
+            <label for="issueDate">Issue Date</label>
+            <input type="date" name="issueDate" placeholder="Issue Date" value={formData.issueDate} onChange={handleChange} />
+          </div>
+          <div  className={styles.formInput}>
+            <label for="expiryDate">Expiry Date</label>
+            <input type="date" name="expiryDate" placeholder="Expiry Date" value={formData.expiryDate} onChange={handleChange} />
+          </div>
         </div>
-        <div className={styles.formbody}>
-          <input type="date" name="issueDate" placeholder="Issue Date" value={formData.issueDate} onChange={handleChange} />
-          <input type="date" name="expiryDate" placeholder="Expiry Date" value={formData.expiryDate} onChange={handleChange} />
         </div>
         <input type="submit" value="Add Passport" />
       </form>

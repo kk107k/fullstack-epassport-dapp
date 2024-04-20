@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from '../../styles/Home.module.css';
 
-function PassportTable({ passports, setPassports, showAddress, showActions  }) {
+function PassportTable({ passports, setPassports, showAddress, showActions, showElse  }) {
   const [loading, setLoading] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [newIssueDate, setNewIssueDate] = useState("");
@@ -135,12 +135,12 @@ function PassportTable({ passports, setPassports, showAddress, showActions  }) {
         <tr>
           <th>Name</th>
           <th>Passport Number</th>
-          <th>Nationality</th>
-          <th>Birth Date</th>
-          <th>Place of Birth</th>
-          <th>Sex</th>
-          <th>Issue Date</th>
-          <th>Expiry Date</th>
+          {showElse && <th>Nationality</th>}
+          {showElse && <th>Birth Date</th>}
+          {showElse && <th>Place of Birth</th>}
+          {showElse && <th>Sex</th>}
+          {showElse && <th>Issue Date</th>}
+          {showElse && <th>Expiry Date</th>}
           {showAddress && <th>Passport Address</th>}
           {showActions && <th>Action</th>}
         </tr>
@@ -150,14 +150,14 @@ function PassportTable({ passports, setPassports, showAddress, showActions  }) {
           <tr key={index}>
             <td>{passport.name}</td>
             <td>{passport.passportNumber}</td>
-            <td>{passport.nationality}</td>
-            <td>{formatDate(passport.birthDate)}</td>
-            <td>{passport.placeOfBirth}</td>
-            <td>{passport.sex}</td>
-            <td>{editIndex === index ? <input type="text" value={newIssueDate} onChange={e => setNewIssueDate(e.target.value)} /> : formatDate(passport.issueDate)}</td>
-            <td>{editIndex === index ? <input type="text" value={newExpiryDate} onChange={e => setNewExpiryDate(e.target.value)} /> : formatDate(passport.expiryDate)}</td>
+            {showElse && <td>{passport.nationality}</td>}
+            {showElse && <td>{formatDate(passport.birthDate)}</td>}
+            {showElse && <td>{passport.placeOfBirth}</td>}
+            {showElse && <td>{passport.sex}</td>}
+            {showElse && <td>{editIndex === index ? <input type="text" value={newIssueDate} onChange={e => setNewIssueDate(e.target.value)} /> : formatDate(passport.issueDate)}</td>}
+            {showElse && <td>{editIndex === index ? <input type="text" value={newExpiryDate} onChange={e => setNewExpiryDate(e.target.value)} /> : formatDate(passport.expiryDate)}</td>}
             {showAddress && <td>{passport.passportAddress}</td>}
-            <td>
+            <td className={styles.tableButtons}>
               {showActions && (
                 <>
                   {editIndex === index ? (
@@ -167,10 +167,10 @@ function PassportTable({ passports, setPassports, showAddress, showActions  }) {
                     </>
                   ) : (
                     <>
-                      <button className={styles.button} onClick={() => setEditIndex(index)}>Edit</button>
-                      <button className={styles.button} onClick={() => handleDeletePassport(index)}>Delete</button>
-                      <button className={styles.button} onClick={handleDeleteAllPassports}>Delete All Passports</button>
-                    </>
+                      <button className={styles.button} onClick={() => setEditIndex(index)}>⚙️</button>
+                      <button className={styles.button} onClick={() => handleDeletePassport(index)}>❌</button>
+{/*                       <button className={styles.button} onClick={handleDeleteAllPassports}>Delete All Passports</button>
+ */}                    </>
                   )}
                 </>
               )}
