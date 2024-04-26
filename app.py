@@ -1,9 +1,9 @@
 import os
 import cv2
-from flask import Flask, request, jsonify, render_template, session, redirect, app  # Importing necessary Flask modules
+from flask import Flask, request, jsonify, render_template, session, redirect, app
 import face_recognition
 from flask_cors import CORS
-from datetime import timedelta, datetime
+from datetime import timedelta
 from web3 import Web3
 
 
@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app)
 
 registered_data = {}  # Dictionary to store registered data (photo filename associated with the provided name)
-registered_admin_data = {}  # Dictionary to store registered data (photo filename associated with the provided name)
+registered_admin_data = {}  # Dictionary to store registered admin data (photo filename associated with the provided name)
 
 app.secret_key = 'kiarash'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
@@ -116,10 +116,8 @@ def admin_login():
     
     for filename, admin_info in registered_admin_data.items():
         if admin_user_metamask_address != admin_metamask_address:
-            print("not MATCH 1.")
             return jsonify({'success': False, 'error': 'admin MetaMask addresses do not match.'})
         if admin_info['username'] == username and admin_info['password'] == password:
-            print("did not match")
             registered_photo = os.path.join(admin_uploads_folder, filename)
             if not os.path.exists(registered_photo):
                 continue
@@ -301,18 +299,22 @@ def adminRegistrationPage():
 @app.route('/logout')
 def logout():
     global last_authenticated_user
+    global last_authenticated_admin
     print("Logged out")
+    session.clear()  # Clear the session data
     last_authenticated_user = None
-    return redirect("/")  # You can redirect or return a JSON response
+    last_authenticated_admin = None
+    return render_template('logout.html')
+
 
 @app.route('/adminlogout')
 def admin_logout():
+    render_template('logout.html')
     global last_authenticated_admin
     print("Logged out")
     session.clear()  # Clear the session data
     last_authenticated_admin = None
     print(last_authenticated_admin)
-    return redirect("/")  # You can redirect or return a JSON response
     
 
 if __name__ == '__main__':

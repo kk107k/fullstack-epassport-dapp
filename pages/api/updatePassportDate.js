@@ -9,8 +9,11 @@ async function handler(req, res) {
         const signer = new ethers.Wallet(Constants.PRIVATE_KEY, provider);
         const contract = new ethers.Contract(Constants.contractAddress, Constants.contractAbi, signer);
         
-        // Call the updatePassportDate function in the smart contract
-        await contract.updatePassportDate(index, issueDate, expiryDate);
+        // Specify the gas limit here (for example, 300000)
+        const gasLimit = ethers.utils.hexlify(800000);
+
+        // Call the updatePassportDate function with gasLimit option
+        await contract.updatePassportDate(index, issueDate, expiryDate, { gasLimit });
 
         res.status(200).json({ message: "Passport dates updated successfully" });
     } catch (error) {

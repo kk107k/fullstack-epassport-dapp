@@ -74,7 +74,7 @@ function PassportForm({ setPassports }) {
         </div>
       )}
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h1>Passport Form</h1>
+        <h1>Passport Registry</h1>
         <div className={styles.formContainer}>
           <div className={styles.formTop}>
           <div className={styles.formInput}>

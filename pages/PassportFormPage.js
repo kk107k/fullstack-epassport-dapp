@@ -10,74 +10,72 @@ import styles from '../styles/Home.module.css';
 
 const PassportFormPage = () => {
 
-    const [passports, setPassports] = useState([]);
-    const [authenticated, setAuthenticated] = useState(false);
+  const [passports, setPassports] = useState([]);
+  const [authenticated, setAuthenticated] = useState(false);
 
-    useEffect(() => {
-      fetch('http://127.0.0.1:5000/authenticationData')
-      fetch('http://127.0.0.1:5000/authenticationAdmin')
-        .then(response => response.json())
-        .then(data => {
-          setAuthenticated(data.success);
-          setUserName(data.name);
-        })
-        .catch(error => {
-          console.error('Error fetching authentication data:', error);
-        });
-    }, []);
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/authenticationData')
+    fetch('http://127.0.0.1:5000/authenticationAdmin')
+      .then(response => response.json())
+      .then(data => {
+        setAuthenticated(data.success);
+        setUserName(data.name);
+      })
+      .catch(error => {
+        console.error('Error fetching authentication data:', error);
+      });
+  }, []);
 
 
-    useEffect(() => {
-        const connectToMetamask = async () => {
-          try {
-            if (window.ethereum) {
-              const provider = new ethers.providers.Web3Provider(window.ethereum);
-              const signer = provider.getSigner();
-              const contractInstance = new ethers.Contract(Constants.contractAddress, Constants.contractAbi, signer);
-              const passports = await contractInstance.getAllPassports();
-              console.log("Passports:", passports);
-              console.log("Connected");
-              const formattedPassports = passports.map(passport => ({
-                ...passport,
-                birthDate: passport.birthDate.toString(),
-                issueDate: passport.issueDate.toString(),
-                expiryDate: passport.expiryDate.toString()
-              }));
-              setPassports(formattedPassports);
-            } else {
-              console.log("Metamask not found");
-            }
-          } catch (err) {
-            console.error(err);
-          }
-        };
-    
-        connectToMetamask();
-      }, []);
+  useEffect(() => {
+    const connectToMetamask = async () => {
+      try {
+        if (window.ethereum) {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
+          const contractInstance = new ethers.Contract(Constants.contractAddress, Constants.contractAbi, signer);
+          const passports = await contractInstance.getAllPassports();
+          const formattedPassports = passports.map(passport => ({
+            ...passport,
+            birthDate: passport.birthDate.toString(),
+            issueDate: passport.issueDate.toString(),
+            expiryDate: passport.expiryDate.toString()
+          }));
+          setPassports(formattedPassports);
+        } else {
+          console.log("Metamask not found");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-    const renderContent = () => {
-        if (authenticated) {
-          return (
-            <div>
-              <Navbar />
-              <div class={styles.passportFormPageContainer}>
-             <div class={styles.passportFormContainer}>
-                <PassportForm passports={passports} setPassports={setPassports} />
-              </div>
-              <div className={styles.passportTableContainer}>
-                <PassportTable passports={passports} showActions={false} showAddress={false} showElse={false} setPassports={setPassports} />
-              </div>
+    connectToMetamask();
+  }, []);
+
+  const renderContent = () => {
+    if (authenticated) {
+      return (
+        <div>
+          <Navbar />
+          <div class={styles.passportFormPageContainer}>
+            <div class={styles.passportFormContainer}>
+              <PassportForm passports={passports} setPassports={setPassports} />
+            </div>
+            <div className={styles.passportTableContainer}>
+              <PassportTable passports={passports} showActions={false} showAddress={false} showElse={false} setPassports={setPassports} />
+            </div>
           </div>
 
-            </div>
-          );
-        } else {
-          return <h1>AUTHENTICATED USERS ONLY</h1>;
-        }
-      };
+        </div>
+      );
+    } else {
+      return <h1>AUTHENTICATED USERS ONLY</h1>;
+    }
+  };
 
   return (
-  
+
     <div class={styles.body}>
       {renderContent()}
     </div>

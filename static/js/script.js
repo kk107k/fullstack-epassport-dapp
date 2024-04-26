@@ -28,14 +28,12 @@ function register(){
     const username = document.getElementById('regUsername').value;
     const password = document.getElementById('regPassword').value;
     const photo = dataURItoBlob(canvas.toDataURL());
-    const userMetamaskAddress = document.getElementById('regMetaMaskAddress').value; // Get user's Metamask address
-
-    console.log(userMetamaskAddress);
+    const userMetamaskAddress = document.getElementById('regMetaMaskAddress').value; 
     const formData = new FormData();
     formData.append('username', username);
     formData.append('password', password);
     formData.append('photo', photo, `${username}.jpg`);
-    formData.append('user_metamask_address', userMetamaskAddress); // Append user's Metamask address
+    formData.append('user_metamask_address', userMetamaskAddress);
 
     fetch('/register', {
         method: 'POST',
@@ -45,8 +43,6 @@ function register(){
     .then(data => {
         if (data.success) {
             alert("Registered successfully.");
-            logout()
-            alert("Logged out successfully.");
             const userName = data.name; // Retrieve the associated name from the response
             window.location.href = `http://127.0.0.1:5000/organizationLogin`; // Redirect to localhost:3000
         }else{
@@ -71,9 +67,6 @@ function login(metamaskAddress){
     formData.append('photo', photo, 'login.jpg');
     formData.append('user_metamask_address', userMetamaskAddress); // Append user's Metamask address
     formData.append('metamask_address', metamaskAddress); 
-
-    console.log(userMetamaskAddress)
-    console.log(metamaskAddress)
 
     fetch('/login', {
         method: 'POST',

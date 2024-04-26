@@ -26,34 +26,36 @@ const PassportTablePage = () => {
     }, []);
 
     useEffect(() => {
-        const connectToMetamask = async () => {
-          try {
-            if (window.ethereum) {
-              const provider = new ethers.providers.Web3Provider(window.ethereum);
-              const signer = provider.getSigner();
-              const contractInstance = new ethers.Contract(Constants.contractAddress, Constants.contractAbi, signer);
-              const passports = await contractInstance.getAllPassports();
-              console.log("Passports:", passports);
-              console.log("Connected");
-              const formattedPassports = passports.map(passport => ({
-                ...passport,
-                birthDate: passport.birthDate.toString(),
-                issueDate: passport.issueDate.toString(),
-                expiryDate: passport.expiryDate.toString()
-              }));
-              setPassports(formattedPassports);
-            } else {
-              console.log("Metamask not found");
-            }
-          } catch (err) {
-            console.error(err);
+      const connectToMetamask = async () => {
+        try {
+          if (window.ethereum) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const contractInstance = new ethers.Contract(Constants.contractAddress, Constants.contractAbi, signer);
+  
+            const gasLimit = ethers.utils.hexlify(80000000);
+  
+            const passports = await contractInstance.getAllPassports({ gasLimit });
+            console.log("Passports:", passports);
+            console.log("Connected");
+            const formattedPassports = passports.map(passport => ({
+              ...passport,
+              birthDate: passport.birthDate.toString(),
+              issueDate: passport.issueDate.toString(),
+              expiryDate: passport.expiryDate.toString()
+            }));
+            setPassports(formattedPassports);
+          } else {
+            console.log("Metamask not found");
           }
-        };
-    
-        connectToMetamask();
-      }, []);
-
-
+        } catch (err) {
+          console.error(err);
+        }
+      };
+  
+      connectToMetamask();
+    }, []);
+  
       const renderContent = () => {
         if (authenticated) {
           return (

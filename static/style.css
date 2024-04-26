@@ -8,6 +8,7 @@
 
   /* Position other content */
 #content {
+    overflow: hidden;
     position: relative;
     display: flex;
     justify-content: center;

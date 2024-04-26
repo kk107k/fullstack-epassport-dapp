@@ -9,6 +9,9 @@ const Navbar = () => {
     <nav className={styles.Navbar}>
       <ul>
         <li>
+          <a href="http://127.0.0.1:5000/logout" className={styles.logoutButton}><p>Log out</p></a>
+        </li>
+        <li>
           <a href="/" className={router.pathname === '/' ? styles.active : ''}>Home</a>
         </li>
         <li>
