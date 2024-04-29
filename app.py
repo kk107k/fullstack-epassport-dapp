@@ -14,7 +14,9 @@ app = Flask(__name__)
 CORS(app)
 
 registered_data = {}  # Dictionary to store registered data (photo filename associated with the provided name)
-registered_admin_data = {}  # Dictionary to store registered admin data (photo filename associated with the provided name)
+registered_admin_data = {
+    'kiarash.jpg': {'username': 'kiarash', 'password': '123', 'admin_user_metamask_address': '0x6de4770fdedebcb38bcf465865906c9c64e76e65'}
+}  # Dictionary to store registered admin data (photo filename associated with the provided name)
 
 app.secret_key = 'kiarash'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
@@ -81,91 +83,68 @@ def admin_login():
 
     username = request.form.get('username')
     password = request.form.get('password')
-    admin_user_metamask_address = request.form.get('admin_user_metamask_address')
-    if not username or not password or not admin_user_metamask_address:
-        return jsonify({'success': False, 'error': 'Username, password, and user Metamask address are required'})
-
     photo = request.files['photo']
+    admin_user_metamask_address = request.form.get('admin_user_metamask_address')
+
+    if not admin_user_metamask_address:
+        return jsonify({'success': False, 'error': 'Username, password, and user Metamask address are required'})
+    if not username:
+        return jsonify({'success': False, 'error': 'Username is required'})
+    if not password:
+        return jsonify({'success': False, 'error': 'Password is required'})
     if not photo:
         return jsonify({'success': False, 'error': 'Photo is required'})
 
     print("MetaMask address from form:", admin_metamask_address)
     print("User Metamask address from form:", admin_user_metamask_address)
 
+    # Verify MetaMask addresses
+    if admin_user_metamask_address != admin_metamask_address:
+        print("MetaMask addresses do not match.")
+        return jsonify({'success': False, 'error': 'MetaMask addresses do not match.'})
 
     admin_uploads_folder = os.path.join(os.getcwd(), 'static', 'admin_uploads')
     if not os.path.exists(admin_uploads_folder):  
         os.makedirs(admin_uploads_folder)
+
     login_filename = os.path.join(admin_uploads_folder, 'login_face.jpg')  
     photo.save(login_filename)  
 
-    login_image = cv2.imread(login_filename)  
-    gray_image = cv2.cvtColor(login_image, cv2.COLOR_BGR2GRAY)  
+    login_image = cv2.imread(login_filename)
+    gray_image = cv2.cvtColor(login_image, cv2.COLOR_BGR2GRAY)
 
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-    
-    if len(faces) == 0:  
+
+    if len(faces) == 0:
         return jsonify({'success': False, 'error': 'No faces detected in the photo'})
 
-    login_image = face_recognition.load_image_file(login_filename)  
+    login_image = face_recognition.load_image_file(login_filename)
     login_face_encodings = face_recognition.face_encodings(login_image)
+
+    print("Number of face encodings in login image:", len(login_face_encodings))
 
     if not login_face_encodings:
         return jsonify({'success': False, 'error': 'Could not encode the face in the photo'})
-    
+
     for filename, admin_info in registered_admin_data.items():
-        if admin_user_metamask_address != admin_metamask_address:
-            return jsonify({'success': False, 'error': 'admin MetaMask addresses do not match.'})
         if admin_info['username'] == username and admin_info['password'] == password:
             registered_photo = os.path.join(admin_uploads_folder, filename)
-            if not os.path.exists(registered_photo):
-                continue
-
             registered_image = face_recognition.load_image_file(registered_photo)
             registered_face_encodings = face_recognition.face_encodings(registered_image)
+            print("Number of face encodings in registered image:", len(registered_face_encodings))
+            if len(registered_face_encodings) > 0 and len(login_face_encodings) > 0:
+                # Compare the face encodings of the login face and the registered face
+                matches = face_recognition.compare_faces(registered_face_encodings, login_face_encodings[0])
+                print("Matches:", matches)
+                if any(matches):
+                    last_authenticated_admin = username
+                    session['logged_in'] = True
+                    session['user_name'] = username
+                    session.permanent = True
+                    return jsonify({'success': True, 'name': username})
 
-            if registered_face_encodings and face_recognition.compare_faces(registered_face_encodings, login_face_encodings[0]):
-                last_authenticated_admin = username
-                session['logged_in'] = True
-                session['user_name'] = username
-                session.permanent = True
-                return jsonify({'success': True, 'name': username})
-            
-    if admin_accounts['admin_accounts']['admin_user_metamask_address'] != admin_metamask_address:
-        print("not MATCH 2.")
-        return jsonify({'success': False, 'error': 'admin MetaMask addresses do not match.'})
-
-    if username == admin_accounts['admin_accounts']['admin_username'] and password == admin_accounts['admin_accounts']['admin_password']:
-        # Load the hardcoded image for comparison
-        admin_image = face_recognition.load_image_file(admin_accounts_faceID)
-        admin_face_encoding = face_recognition.face_encodings(admin_image)
-
-        # Check if face encoding is available
-        if not admin_face_encoding:
-            return jsonify({'success': False, 'error': 'Could not encode the face in the admin image'})
-
-        # Load the login face image
-        photo = request.files['photo']
-        login_image = face_recognition.load_image_file(photo)
-        login_face_encodings = face_recognition.face_encodings(login_image)
-
-        # Check if face encoding is available
-        if not login_face_encodings:
-            return jsonify({'success': False, 'error': 'Could not encode the face in the provided photo'})
-
-        # Compare faces
-        if face_recognition.compare_faces(admin_face_encoding, login_face_encodings[0]):
-            # Admin authentication successful
-            last_authenticated_admin = username
-            session['logged_in'] = True
-            session['user_name'] = username
-            session.permanent = True
-            return jsonify({'success': True, 'name': username, 'role': 'admin'})
-        else:
-            return jsonify({'success': False, 'error': 'Face not recognized'})
-    else:
-        return jsonify({'success': False, 'error': 'Invalid username or password'})
+    return jsonify({'success': False, 'error': 'Invalid credentials or face not recognized'})
 
 @app.route('/register', methods=['POST'])  
 def register():
@@ -208,17 +187,17 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
     user_metamask_address = request.form.get('user_metamask_address')
-    if not username or not password or not user_metamask_address:
-        return jsonify({'success': False, 'error': 'Username, password, and user Metamask address are required'})
-
     photo = request.files['photo']
+
+    if not user_metamask_address:
+        return jsonify({'success': False, 'error': 'Metamask address are required'})
+    if not username:
+        return jsonify({'success': False, 'error': 'Username is required'})
+    if not password:
+        return jsonify({'success': False, 'error': 'Password is required'})
     if not photo:
         return jsonify({'success': False, 'error': 'Photo is required'})
 
-    print("MetaMask address from form:", metamask_address)
-    print("User Metamask address from form:", user_metamask_address)
-
-    # Verify MetaMask addresses
     if user_metamask_address != metamask_address:
         print("MetaMask addresses do not match.")
         return jsonify({'success': False, 'error': 'MetaMask addresses do not match.'})
@@ -226,36 +205,44 @@ def login():
     uploads_folder = os.path.join(os.getcwd(), 'static', 'uploads')
     if not os.path.exists(uploads_folder):
         os.makedirs(uploads_folder)
-
     login_filename = os.path.join(uploads_folder, 'login_face.jpg')
     photo.save(login_filename)
 
-    # Face recognition logic
-    try:
-        login_image = face_recognition.load_image_file(login_filename)
-        login_face_encodings = face_recognition.face_encodings(login_image)
-        if not login_face_encodings:
-            return jsonify({'success': False, 'error': 'No face detected in the photo'})
+    login_image = cv2.imread(login_filename)
+    gray_image = cv2.cvtColor(login_image, cv2.COLOR_BGR2GRAY)
 
-        # User authentication
-        for filename, user_info in registered_data.items():
-            if (user_info['username'] == username and
-                    user_info['password'] == password):
-                registered_photo = os.path.join(uploads_folder, filename)
-                if os.path.exists(registered_photo):
-                    registered_image = face_recognition.load_image_file(registered_photo)
-                    registered_face_encodings = face_recognition.face_encodings(registered_image)
-                    if registered_face_encodings and face_recognition.compare_faces(registered_face_encodings, login_face_encodings[0]):
-                        last_authenticated_user = username
-                        session['logged_in'] = True
-                        session['user_name'] = username
-                        session.permanent = True
-                        return jsonify({'success': True, 'name': username})
-                else:
-                    return jsonify({'success': False, 'error': 'Registered photo not found'})
-        return jsonify({'success': False, 'error': 'Invalid credentials or face not recognized'})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+
+    if len(faces) == 0:
+        return jsonify({'success': False, 'error': 'No faces detected in the photo'})
+
+    login_image = face_recognition.load_image_file(login_filename)
+    login_face_encodings = face_recognition.face_encodings(login_image)
+
+    print("Number of face encodings in login image:", len(login_face_encodings))
+
+    if not login_face_encodings:
+        return jsonify({'success': False, 'error': 'Could not encode the face in the photo'})
+
+    for filename, user_info in registered_data.items():
+        if user_info['username'] == username and user_info['password'] == password:
+            registered_photo = os.path.join(uploads_folder, filename)
+            registered_image = face_recognition.load_image_file(registered_photo)
+            registered_face_encodings = face_recognition.face_encodings(registered_image)
+            print("Number of face encodings in registered image:", len(registered_face_encodings))
+            if len(registered_face_encodings) > 0 and len(login_face_encodings) > 0:
+                # Compare the face encodings of the login face and the registered face
+                matches = face_recognition.compare_faces(registered_face_encodings, login_face_encodings[0])
+                print("Matches:", matches)
+                if any(matches):
+                    last_authenticated_user = username
+                    session['logged_in'] = True
+                    session['user_name'] = username
+                    session.permanent = True
+                    return jsonify({'success': True, 'name': username})
+
+    return jsonify({'success': False, 'error': 'Invalid credentials or face not recognized'})
 
 @app.route('/authenticationData', methods=['GET'])
 def get_authentication_data():
