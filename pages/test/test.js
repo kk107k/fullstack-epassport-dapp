@@ -14,6 +14,19 @@ function Test() {
   const [totalTimeTaken, setTotalTimeTaken] = useState(0); 
   const [authenticated, setAuthenticated] = useState(false)
 
+  const logTestMessage = (message, timeTaken = null, isSuccess = false) => {
+    if (isSuccess) {
+      const timeString = timeTaken ? ` <span style="color:#D75844">(${timeTaken}ms)</span>` : '';
+      const successMessage = `<span style="color:#0DBC73">${message}</span>${timeString}`;
+      setTestResult(prevResult => [...prevResult, successMessage]);
+      setTestsPassed(prevPassed => prevPassed + 1); // Increment tests passed count
+    } else {
+      const formattedMessage = timeTaken ? `${message} <span style="color:#D75844">(${timeTaken}ms)</span>` : message;
+      setTestResult(prevResult => [...prevResult, formattedMessage]);
+    }
+  };
+  
+
   const fetchAuthenticationData = async () => {
     try {
       const startTime = Date.now();
@@ -26,7 +39,6 @@ function Test() {
       const endTime = Date.now();
       const timeTaken = endTime - startTime;
       logTestMessage("Authentication data fetched successfully", timeTaken, true);
-      // Proceed with other tests after fetching authentication data
       fetchPassports();
     } catch (error) {
       console.error('Error fetching authentication data:', error);
@@ -58,22 +70,6 @@ function Test() {
     } catch (error) {
       console.error("Error fetching passports:", error);
       logTestMessage("Error fetching passports", null, false); // Log error message
-    }
-  };
-
-  const logTestMessage = (message, timeTaken = null, isSuccess = false) => {
-    if (isSuccess) {
-      const timeString = timeTaken ? <span style={{ color: '#D75844' }}> ({timeTaken}ms)</span> : '';
-      const messageWithIcon = (
-        <span>
-          <span style={{ color: '#0DBC73' }}>✔</span> {message}{timeString}
-        </span>
-      );
-      setTestResult(prevResult => [...prevResult, messageWithIcon]);
-      setTestsPassed(prevPassed => prevPassed + 1); // Increment tests passed count
-    } else {
-      const formattedMessage = timeTaken ? `${message} (${timeTaken}ms)` : message;
-      setTestResult(prevResult => [...prevResult, formattedMessage]);
     }
   };
 
@@ -209,6 +205,7 @@ function Test() {
         const timeTaken = endTime - startTime;
         setLastPassport(null);
         logTestMessage("deletePassport API ran successfully, test passport deleted", timeTaken, true);
+        runTests();
       }
     } catch (error) {
       console.error(error);
@@ -217,8 +214,22 @@ function Test() {
       const endTime = Date.now();
       const timeTaken = endTime - startTime;
       setLoading(false);
-      setTestingInProgress(false); // Reset testing in progress
       setTotalTimeTaken(prevTime => prevTime + timeTaken); // Add time taken for this test to total time
+    }
+  };
+
+  const runTests = async () => {
+    try {
+      setLoading(true);
+      const startTime = Date.now();
+      const response = await fetch('http://127.0.0.1:5000/runTests');
+      const data = await response.json();
+      setTestResult(prevTestResults => [...prevTestResults, ...data.results]);
+      setTotalTimeTaken(data.totalTimeTaken);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error running tests:', error);
+      setLoading(false);
     }
   };
 
@@ -228,10 +239,9 @@ function Test() {
         {loading ? "Running test..." : "Run test"}
       </button>
       {testResult.map((message, index) => (
-        <p key={index}>{message}</p>
-      ))}
-      {testsPassed === 4 && (
-        <p>{testsPassed} Tests Passed ({totalTimeTaken}ms)</p>
+         <p key={index} dangerouslySetInnerHTML={{ __html: message }} />      ))}
+      {testsPassed === 5 && (
+        <p>{testsPassed} API Tests Passed ({totalTimeTaken}ms)</p>
       )}
     </div>
   );

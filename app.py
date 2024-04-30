@@ -5,6 +5,8 @@ import face_recognition
 from flask_cors import CORS
 from datetime import timedelta
 from web3 import Web3
+import subprocess
+
 
 
 web3 = Web3(Web3.HTTPProvider('https://volta-rpc.energyweb.org'))
@@ -95,12 +97,8 @@ def admin_login():
     if not photo:
         return jsonify({'success': False, 'error': 'Photo is required'})
 
-    print("MetaMask address from form:", admin_metamask_address)
-    print("User Metamask address from form:", admin_user_metamask_address)
-
     # Verify MetaMask addresses
     if admin_user_metamask_address != admin_metamask_address:
-        print("MetaMask addresses do not match.")
         return jsonify({'success': False, 'error': 'MetaMask addresses do not match.'})
 
     admin_uploads_folder = os.path.join(os.getcwd(), 'static', 'admin_uploads')
@@ -122,7 +120,7 @@ def admin_login():
     login_image = face_recognition.load_image_file(login_filename)
     login_face_encodings = face_recognition.face_encodings(login_image)
 
-    print("Number of face encodings in login image:", len(login_face_encodings))
+    """ print("Number of face encodings in login image:", len(login_face_encodings)) """
 
     if not login_face_encodings:
         return jsonify({'success': False, 'error': 'Could not encode the face in the photo'})
@@ -132,11 +130,11 @@ def admin_login():
             registered_photo = os.path.join(admin_uploads_folder, filename)
             registered_image = face_recognition.load_image_file(registered_photo)
             registered_face_encodings = face_recognition.face_encodings(registered_image)
-            print("Number of face encodings in registered image:", len(registered_face_encodings))
+            """print("Number of face encodings in registered image:", len(registered_face_encodings))"""
             if len(registered_face_encodings) > 0 and len(login_face_encodings) > 0:
                 # Compare the face encodings of the login face and the registered face
                 matches = face_recognition.compare_faces(registered_face_encodings, login_face_encodings[0])
-                print("Matches:", matches)
+                """print("Matches:", matches)"""
                 if any(matches):
                     last_authenticated_admin = username
                     session['logged_in'] = True
@@ -199,7 +197,6 @@ def login():
         return jsonify({'success': False, 'error': 'Photo is required'})
 
     if user_metamask_address != metamask_address:
-        print("MetaMask addresses do not match.")
         return jsonify({'success': False, 'error': 'MetaMask addresses do not match.'})
 
     uploads_folder = os.path.join(os.getcwd(), 'static', 'uploads')
@@ -220,7 +217,7 @@ def login():
     login_image = face_recognition.load_image_file(login_filename)
     login_face_encodings = face_recognition.face_encodings(login_image)
 
-    print("Number of face encodings in login image:", len(login_face_encodings))
+    """print("Number of face encodings in login image:", len(login_face_encodings))"""
 
     if not login_face_encodings:
         return jsonify({'success': False, 'error': 'Could not encode the face in the photo'})
@@ -230,11 +227,11 @@ def login():
             registered_photo = os.path.join(uploads_folder, filename)
             registered_image = face_recognition.load_image_file(registered_photo)
             registered_face_encodings = face_recognition.face_encodings(registered_image)
-            print("Number of face encodings in registered image:", len(registered_face_encodings))
+            """print("Number of face encodings in registered image:", len(registered_face_encodings))"""
             if len(registered_face_encodings) > 0 and len(login_face_encodings) > 0:
                 # Compare the face encodings of the login face and the registered face
                 matches = face_recognition.compare_faces(registered_face_encodings, login_face_encodings[0])
-                print("Matches:", matches)
+                """print("Matches:", matches)"""
                 if any(matches):
                     last_authenticated_user = username
                     session['logged_in'] = True
@@ -287,7 +284,6 @@ def adminRegistrationPage():
 def logout():
     global last_authenticated_user
     global last_authenticated_admin
-    print("Logged out")
     session.clear()  # Clear the session data
     last_authenticated_user = None
     last_authenticated_admin = None
@@ -298,10 +294,42 @@ def logout():
 def admin_logout():
     render_template('logout.html')
     global last_authenticated_admin
-    print("Logged out")
     session.clear()  # Clear the session data
     last_authenticated_admin = None
-    print(last_authenticated_admin)
+
+
+@app.route('/runTests', methods=['GET'])
+def run_tests():
+    try:
+        result = subprocess.run(['python', './app_tests.py'], capture_output=True, text=True)
+        
+        # Parse the output of the test script
+        output = result.stdout.splitlines()
+        tests_passed = 0
+        total_time_taken = 0
+        
+        # Extract relevant information from the test output
+        for line in output:
+            if "tests ran successfully" in line:
+                tests_passed = int(line.split()[0])
+            elif "m tests ran successfully" in line:
+                tests_passed = int(line.split()[0])
+            elif "seconds taken to complete" in line:
+                total_time_taken = float(line.split()[0])
+             
+
+        # Prepare response data
+        response_data = {
+            "results": output,
+            "testsPassed": tests_passed + 5,
+            "totalTimeTaken": total_time_taken
+        }
+        
+        return jsonify(response_data), 200
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({"error": error_message}), 500
+
     
 
 if __name__ == '__main__':

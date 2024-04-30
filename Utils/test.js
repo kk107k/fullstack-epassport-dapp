@@ -1,18 +1,46 @@
-for filename, admin_info in registered_admin_data.items():
-        if admin_info['username'] == username and admin_info['password'] == password:
-            registered_photo = os.path.join(admin_uploads_folder, filename)
-            registered_image = face_recognition.load_image_file(registered_photo)
-            registered_face_encodings = face_recognition.face_encodings(registered_image)
-            print("Number of face encodings in registered image:", len(registered_face_encodings))
-            if len(registered_face_encodings) > 0 and len(login_face_encodings) > 0:
-                # Compare the face encodings of the login face and the registered face
-                matches = face_recognition.compare_faces(registered_face_encodings, login_face_encodings[0])
-                print("Matches:", matches)
-                if any(matches):
-                    last_authenticated_admin = username
-                    session['logged_in'] = True
-                    session['user_name'] = username
-                    session.permanent = True
-                    return jsonify({'success': True, 'name': username})
+import React, { useState } from "react";
+import styles from "../../styles/Home.module.css";
+import * as Constants from "../../Utils/config";
+import { ethers } from 'ethers'; // Import ethers.js
 
-    return jsonify({'success': False, 'error': 'Invalid credentials or face not recognized'})
+function Test() {
+  const [loading, setLoading] = useState(false);
+  const [testResult, setTestResult] = useState([]);
+  const [testsPassed, setTestsPassed] = useState(0);
+  const [totalTimeTaken, setTotalTimeTaken] = useState(0);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  const runTests = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://127.0.0.1:5000/runTests');
+      const data = await response.json();
+      setTestResult(data.results);
+      setTestsPassed(data.testsPassed);
+      setTotalTimeTaken(data.totalTimeTaken);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error running tests:', error);
+    } finally {
+      setLoading(false);
+      setTestingInProgress(false); // Reset testing in progress
+
+    }
+  };
+
+  return (
+    <div className={styles.test}>    
+      <button onClick={runTests} disabled={loading}>
+        {loading ? "Running tests..." : "Run tests"}
+      </button>
+      {testResult.map((message, index) => (
+        <p key={index}>{message}</p>
+      ))}
+      {testsPassed > 0 && (
+        <p>{testsPassed} Tests Passed ({totalTimeTaken}ms)</p>
+      )}
+    </div>
+  );
+}
+
+export default Test;
